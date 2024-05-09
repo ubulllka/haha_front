@@ -23,3 +23,9 @@ export async function updateInfo(user, token) { //name, email, telegram, passwor
     })
     return checkAuth(result) ? result.json() : null
 }
+
+export async function getUser(id) {
+    const url = baseUrl + id
+    const result = await fetch(`${url}`)
+    return result.json()
+}
