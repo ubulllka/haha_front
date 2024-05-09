@@ -1,3 +1,5 @@
+import {checkAuth} from "./helper";
+
 const baseUrl = "http://localhost:8080/api/vac/"
 
 export async function getAllVacancies() {
@@ -27,7 +29,7 @@ export async function createVacancy(vacancy, token) { //post, description
         body: JSON.stringify(vacancy),
     })
     if (result.status !== 200) return null
-    return result.json()
+    return checkAuth(result) ? result.json() : null
 }
 
 export async function updateVacancy(id, vacancy, token) { //post, description
@@ -41,7 +43,7 @@ export async function updateVacancy(id, vacancy, token) { //post, description
         body: JSON.stringify(vacancy),
     })
     if (result.status !== 200) return null
-    return result.json()
+    return checkAuth(result) ? result.json() : null
 }
 
 export async function deleteVacancy(id, token) {
@@ -54,7 +56,7 @@ export async function deleteVacancy(id, token) {
         },
     })
     if (result.status !== 200) return null
-    return result.json()
+    return checkAuth(result) ? result.json() : null
 }
 
 

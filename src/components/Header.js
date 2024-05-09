@@ -10,6 +10,8 @@ import {setUser} from "../features/user/userSlice";
 
 export const Header = () => {
     const role = useSelector((state) => state.user.role)
+    const role1 = useSelector((state) => state.user.role)
+    console.log(role1)
     let navigate = useNavigate()
     const dispatch = useDispatch()
     const exit = () => {

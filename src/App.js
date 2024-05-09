@@ -6,6 +6,7 @@ import {listAllResLoader, listAllVacLoader, ListPage} from "./pages/ListPage";
 import {RegPage, regAction} from "./pages/RegPage";
 import {logAction, LogPage} from "./pages/LogPage";
 import {useDispatch} from 'react-redux';
+import {infoLoader, ProfilePage} from "./pages/ProfilePage";
 
 const Index = () => {
     const dispatch = useDispatch();
@@ -18,6 +19,7 @@ const Index = () => {
             <Route path='/log' element={<LogPage/>} action={
                 ({request}) => logAction(request, dispatch)
             }/>
+            <Route path='/prof' element={<ProfilePage/>} loader={infoLoader}/>
             <Route path='/vac' element={<ListPage type={"allVac"}/>} loader={listAllVacLoader}/>
             <Route path='/res' element={<ListPage type={"allRes"}/>} loader={listAllResLoader}/>
         </Route>

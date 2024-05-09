@@ -1,3 +1,5 @@
+import {checkAuth} from "./helper";
+
 const baseUrl = "http://localhost:8080/api/appl/"
 
 export async function getApplAllResumes(token) {
@@ -7,5 +9,5 @@ export async function getApplAllResumes(token) {
             'Authorization': token,
         },
     })
-    return result.json()
+    return checkAuth(result) ? result.json() : null
 }

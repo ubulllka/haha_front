@@ -1,3 +1,5 @@
+import {checkAuth} from "./helper";
+
 const baseUrl = "http://localhost:8080/api/res/"
 
 export async function createWork(id, work, token) {//post, description, start_time, end_time (01-02-2006)
@@ -11,7 +13,7 @@ export async function createWork(id, work, token) {//post, description, start_ti
         body: JSON.stringify(work),
     })
     if (result.status !== 200) return null
-    return result.json()
+    return checkAuth(result) ? result.json() : null
 }
 
 export async function updateWork(id, work, token) {//post, description, start_time, end_time (01-02-2006)
@@ -25,7 +27,7 @@ export async function updateWork(id, work, token) {//post, description, start_ti
         body: JSON.stringify(work),
     })
     if (result.status !== 200) return null
-    return result.json()
+    return checkAuth(result) ? result.json() : null
 }
 
 export async function deleteWork(id, token) {
@@ -38,5 +40,5 @@ export async function deleteWork(id, token) {
         },
     })
     if (result.status !== 200) return null
-    return result.json()
+    return checkAuth(result) ? result.json() : null
 }

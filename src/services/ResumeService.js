@@ -1,3 +1,5 @@
+import {checkAuth} from "./helper";
+
 const baseUrl = "http://localhost:8080/api/res/"
 
 export async function getAllResumes() {
@@ -27,7 +29,7 @@ export async function createResume(resume, token) { //big gg
         body: JSON.stringify(resume),
     })
     if (result.status !== 200) return null
-    return result.json()
+    return checkAuth(result) ? result.json() : null
 }
 
 export async function updateResume(id, resume, token) { //post, description
@@ -41,7 +43,7 @@ export async function updateResume(id, resume, token) { //post, description
         body: JSON.stringify(resume),
     })
     if (result.status !== 200) return null
-    return result.json()
+    return checkAuth(result) ? result.json() : null
 }
 
 export async function deleteResume(id, token) {
@@ -54,7 +56,7 @@ export async function deleteResume(id, token) {
         },
     })
     if (result.status !== 200) return null
-    return result.json()
+    return checkAuth(result) ? result.json() : null
 }
 
 
