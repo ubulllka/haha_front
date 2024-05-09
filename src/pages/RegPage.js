@@ -1,15 +1,20 @@
 import {useActionData, useNavigation, redirect} from "react-router-dom"
 import {RegForm} from "../components/auth/RegForm"
+import {singUp} from "../services/AuthService";
 
 export const RegPage = () => {
     const navigation = useNavigation()
-    const message = useActionData()
+    const _ = useActionData()
+    function onChangeEmail() {
+        let emailSpan = document.getElementById("emailspan")
+        emailSpan.innerHTML = ""
+    }
 
     return (
         <>
             <h2 className="mb-3">Регистрация</h2>
             <RegForm action={"/reg"} submitting={navigation.state === 'submitting'}/>
-            {(message) && <p>Аккаунт с такой почтой уже существует</p>}
+            <span className="text-danger" id="emailspan" onChange={onChangeEmail}></span>
         </>
     )
 }
@@ -25,8 +30,10 @@ export const regUserAction = async ({request}) => {
         role: formData.get('role'),
 
     }
-    let span = document.getElementById("formspan")
+    let formSpan = document.getElementById("formspan")
+    let emailSpan = document.getElementById("emailspan")
     let inputs = document.getElementsByTagName("input")
+
     for (let el of inputs)
         el.classList.remove("border-danger")
     if (newUser.name === "" || newUser.email === "" || newUser.password === "") {
@@ -44,11 +51,11 @@ export const regUserAction = async ({request}) => {
             inp.classList.add("border-danger")
         }
 
-        span.innerHTML = "Заполните обязательные поля!"
-        span.classList.add("mb-3", "d-block")
+        formSpan.innerHTML = "Заполните обязательные поля!"
+        formSpan.classList.add("mb-3", "d-block")
     } else {
-        span.innerHTML = ""
-        span.classList.remove("mb-3", "d-block")
+        formSpan.innerHTML = ""
+        formSpan.classList.remove("mb-3", "d-block")
     }
 
     const pas = {
@@ -60,7 +67,11 @@ export const regUserAction = async ({request}) => {
         span.innerHTML = "Пароли не совпадают!"
         return null
     }
-    return null
-    // const result = await registerStudent(newPerson)
-    // return (result !== 409) ? redirect('/log') : true
+    const res = await singUp(newUser)
+    console.log(res)
+    if (!res) {
+        emailSpan.innerHTML = "Аккаунт с такой почтой уже существует"
+        return null
+    }
+    return redirect('/log')
 }

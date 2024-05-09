@@ -1,7 +1,7 @@
 import {Form} from "react-router-dom"
 
 export const RegForm = ({action, submitting}) => {
-    // controlId="exampleForm.ControlInput1"
+
     let flag = true
     function checkPassword() {
         let pass = document.getElementById("password")
