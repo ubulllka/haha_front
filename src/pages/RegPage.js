@@ -14,7 +14,7 @@ export const RegPage = () => {
         <>
             <h2 className="mb-3">Регистрация</h2>
             <RegForm action={"/reg"} submitting={navigation.state === 'submitting'}/>
-            <span className="text-danger" id="emailspan" onChange={onChangeEmail}></span>
+            <span className="text-danger mt-3" id="emailspan" onChange={onChangeEmail}></span>
         </>
     )
 }
@@ -71,7 +71,6 @@ export const regUserAction = async ({request}) => {
     console.log(res)
     if (!res) {
         emailSpan.innerHTML = "Аккаунт с такой почтой уже существует"
-        emailSpan.classList.add("mt-3")
         return null
     }
     return redirect('/log')
