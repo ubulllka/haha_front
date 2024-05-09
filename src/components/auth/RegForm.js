@@ -3,7 +3,7 @@ import {Form} from "react-router-dom"
 export const RegForm = ({submitting}) => {
 
     let flag = true
-    function checkPassword() {
+    const checkPassword = () => {
         let pass = document.getElementById("password")
         let pass2 = document.getElementById("password2")
         let span = document.getElementById("password2span")
@@ -16,7 +16,7 @@ export const RegForm = ({submitting}) => {
         }
     }
 
-    function onChangeEmail() {
+    const onChangeEmail = () => {
         let emailSpan = document.getElementById("emailspan")
         emailSpan.innerHTML = ""
     }
@@ -25,23 +25,25 @@ export const RegForm = ({submitting}) => {
         <Form action="/reg" method="post">
             <label className="mb-2 w-100">
                 <p className="mb-1 form-label">Имя*:</p>
-                <input className="form-control" type="text" placeholder="Иванов Иван Иванович" name="name" />
+                <input className="form-control" type="text" placeholder="Иванов Иван Иванович" name="name"/>
             </label>
             <label className="mb-2 w-100">
                 <p className="mb-1 form-label">Почта*:</p>
-                <input className="form-control" type="email" placeholder="example@mail.ru" name="email" onChange={onChangeEmail} />
+                <input className="form-control" type="email" placeholder="example@mail.ru" name="email"
+                       onChange={onChangeEmail}/>
             </label>
             <label className="mb-2 w-100">
                 <p className="mb-1 form-label">Телеграм:</p>
-                <input className="form-control" type="text" placeholder="@telegram" name="telegram" />
+                <input className="form-control" type="text" placeholder="@telegram" name="telegram"/>
             </label>
             <label className="mb-2 w-100">
                 <p className="mb-1 form-label">Пароль*:</p>
-                <input className="form-control" type="password" name="password" id="password" />
+                <input className="form-control" type="password" name="password" id="password"/>
             </label>
             <label className="mb-2 w-100">
                 <p className="mb-1 form-label">Повторите пароль*:</p>
-                <input className="form-control" type="password" name="password2" id="password2" onChange={checkPassword} />
+                <input className="form-control" type="password" name="password2" id="password2"
+                       onChange={checkPassword}/>
             </label>
             <span className="text-danger" id="password2span"></span>
             <label className="mb-2 w-100">

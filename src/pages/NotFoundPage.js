@@ -1,7 +1,6 @@
-import Container from "react-bootstrap/Container";
 import Alert from "react-bootstrap/Alert";
 
-export const NotFound = () => {
+export const NotFoundPage = () => {
     return (
         <Alert key={"primary"} variant={"primary"} className="text-center">
             <h1>404</h1>

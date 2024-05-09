@@ -9,7 +9,7 @@ export const RegPage = () => {
         <>
             <h2 className="mb-3">Регистрация</h2>
             <RegForm submitting={navigation.state === 'submitting'}/>
-            <span className="text-danger mt-3" id="emailspan" ></span>
+            <span className="text-danger mt-3" id="emailspan"></span>
         </>
     )
 }
@@ -31,15 +31,15 @@ export const regAction = async ({request}) => {
         el.classList.remove("border-danger")
     if (newUser.name === "" || newUser.email === "" || newUser.password === "") {
         if (newUser.name === "") {
-            let inp= document.getElementsByName("name")[0]
+            let inp = document.getElementsByName("name")[0]
             inp.classList.add("border-danger")
         }
         if (newUser.email === "") {
-            let inp= document.getElementsByName("email")[0]
+            let inp = document.getElementsByName("email")[0]
             inp.classList.add("border-danger")
         }
         if (newUser.password === "") {
-            let inp= document.getElementsByName("password")[0]
+            let inp = document.getElementsByName("password")[0]
             inp.classList.add("border-danger")
         }
         formSpan.innerHTML = "Заполните обязательные поля!"

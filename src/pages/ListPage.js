@@ -12,7 +12,7 @@ function returnList(type, list, user) {
         case "allVac":
             return (<ListAllVac list={list}/>)
         case "allRes":
-             return (<ListAllRes list={list}/>)
+            return (<ListAllRes list={list}/>)
         default:
             break;
     }
