@@ -3,14 +3,16 @@ import {Suspense} from "react"
 import {useSelector} from "react-redux";
 import {ListAllVac} from "../components/vacancies/ListAllVac";
 import {getAllVacancies} from "../services/VacancyService";
+import {ListAllRes} from "../components/resumes/ListAllRes";
+import {getAllResumes} from "../services/ResumeService";
 
 
 function returnList(type, list, user) {
     switch (type) {
         case "allVac":
             return (<ListAllVac list={list}/>)
-        case "res":
-            // return (<ListOffice list={list}/>)
+        case "allRes":
+             return (<ListAllRes list={list}/>)
         default:
             break;
     }
@@ -50,6 +52,12 @@ export const ListPage = ({type}) => {
 export const listAllVacLoader = async () => {
     return defer({
         list: getAllVacancies()
+    })
+}
+
+export const listAllResLoader = async () => {
+    return defer({
+        list: getAllResumes()
     })
 }
 

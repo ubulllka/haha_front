@@ -1,34 +1,19 @@
 const baseUrl = "http://localhost:8080/api/res/"
 
-export async function getAllResumes(token) {
-    const result = await fetch(`${baseUrl}`, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': token,
-        }
-    })
+export async function getAllResumes() {
+    const result = await fetch(`${baseUrl}`)
     return result.json()
 }
 
-export async function searchResumes(q, token) {
+export async function searchResumes(q) {
     const url = baseUrl + `search?q=${q}`
-    const result = await fetch(`${url}`, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': token,
-        }
-    })
+    const result = await fetch(`${url}`)
     return result.json()
 }
 
-export async function getResume(id, token) {
+export async function getResume(id) {
     const url = baseUrl + id
-    const result = await fetch(`${url}`, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': token,
-        }
-    })
+    const result = await fetch(`${url}`)
     return result.json()
 }
 

@@ -31,7 +31,7 @@ export const Header = () => {
                         navbarScroll
                     >
                         <Nav.Link href="/vac">Вакансии</Nav.Link>
-                        <Nav.Link href="#action2">Link</Nav.Link>
+                        <Nav.Link href="/res">Резюме</Nav.Link>
                     </Nav>
 
                     <Form className="d-flex gap-2">

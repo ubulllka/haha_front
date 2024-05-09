@@ -18,30 +18,30 @@ const getDateStr = (createdAt) => {
     str += "." + year
     return str
 }
-const VacCard = ({vac}) => {
+const ResCard = ({res}) => {
     const role = useSelector((state) => state.user.role)
     return (
         <Card>
             <Card.Body>
-                <Card.Title>{vac?.post}</Card.Title>
+                <Card.Title>{res?.post}</Card.Title>
                 <Card.Text>
-                    {vac?.description}
+                    {res?.description}
                 </Card.Text>
             </Card.Body>
             <Card.Footer className="text-muted d-flex justify-content-between">
-                <Card.Link href={`/vac/${vac?.ID}`}>
+                <Card.Link href={`/res/${res?.ID}`}>
                     Подробнее...
                 </Card.Link>
-                <p className="mb-0">{getDateStr(vac?.CreatedAt)}</p>
+                <p className="mb-0">{getDateStr(res?.CreatedAt)}</p>
             </Card.Footer>
         </Card>
     )
 }
 
-export const ListAllVac = ({list}) => {
+export const ListAllRes = ({list}) => {
     return (
         <>
-            <h2 className="mb-2">Вакансии</h2>
+            <h2 className="mb-2">Резюме</h2>
             <InputGroup className="mb-3">
                 <Form.Control className="form-control--search"/>
                 <Button variant="outline-secondary" id="button-addon2">
@@ -50,9 +50,9 @@ export const ListAllVac = ({list}) => {
             </InputGroup>
             <ul className="list-unstyled">
                 {
-                    list.map(vac => (
-                        <li key={vac?.ID} className="mb-3">
-                            <VacCard vac={vac}/>
+                    list.map(res => (
+                        <li key={res?.ID} className="mb-3">
+                            <ResCard res={res}/>
                         </li>
                     ))
                 }

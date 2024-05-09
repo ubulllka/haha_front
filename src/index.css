@@ -33,6 +33,10 @@ code {
     flex-grow: 1;
 }
 
-.form-control{
+.form-control--search {
     border-color: #6c757d;
+}
+
+a {
+    text-underline-offset: 3px;
 }
