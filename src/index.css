@@ -40,3 +40,8 @@ code {
 a {
     text-underline-offset: 3px;
 }
+
+.header__link {
+    text-decoration: inherit;
+    color: inherit;
+}

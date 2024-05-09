@@ -1,6 +1,6 @@
 import {Form} from "react-router-dom"
 
-export const RegForm = ({action, submitting}) => {
+export const RegForm = ({submitting}) => {
 
     let flag = true
     function checkPassword() {
@@ -16,15 +16,20 @@ export const RegForm = ({action, submitting}) => {
         }
     }
 
+    function onChangeEmail() {
+        let emailSpan = document.getElementById("emailspan")
+        emailSpan.innerHTML = ""
+    }
+
     return (
-        <Form action={`${action}`} method="post">
+        <Form action="/reg" method="post">
             <label className="mb-2 w-100">
                 <p className="mb-1 form-label">Имя*:</p>
                 <input className="form-control" type="text" placeholder="Иванов Иван Иванович" name="name" />
             </label>
             <label className="mb-2 w-100">
                 <p className="mb-1 form-label">Почта*:</p>
-                <input className="form-control" type="email" placeholder="example@mail.ru" name="email" />
+                <input className="form-control" type="email" placeholder="example@mail.ru" name="email" onChange={onChangeEmail} />
             </label>
             <label className="mb-2 w-100">
                 <p className="mb-1 form-label">Телеграм:</p>
