@@ -71,6 +71,7 @@ export const regUserAction = async ({request}) => {
     console.log(res)
     if (!res) {
         emailSpan.innerHTML = "Аккаунт с такой почтой уже существует"
+        emailSpan.classList.add("mt-3")
         return null
     }
     return redirect('/log')
