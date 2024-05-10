@@ -7,9 +7,10 @@ import {useEffect, useState} from "react";
 import {searchResumes} from "../../services/ResumeService";
 import {getDateStr} from "../getDataStr";
 import {PagBlock} from "../Pag";
+import {ModalBlock} from "../ModalBlock";
 
 
-const ResCard = ({res}) => {
+const ResCard = ({res, setShow, setMainId}) => {
     const role = useSelector((state) => state.user.role)
     return (
         <Card>
@@ -23,6 +24,10 @@ const ResCard = ({res}) => {
                 <Card.Link href={`/res/${res?.ID}`}>
                     Подробнее...
                 </Card.Link>
+                <Button onClick={() => {
+                        setShow(true)
+                        setMainId(res?.ID)
+                }}>Откликнуться</Button>
                 <p className="mb-0">{getDateStr(res?.CreatedAt)}</p>
             </Card.Footer>
         </Card>
@@ -30,16 +35,18 @@ const ResCard = ({res}) => {
 }
 
 export const ListAllRes = () => {
-    const [isLoading, setIsLoading] = useState(true);
-    const [list, setList] = useState(null);
+    const [isLoading, setIsLoading] = useState(true)
+    const [list, setList] = useState(null)
     const [query, setQuery] = useState("")
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState("")
     const [pagination, setPagination] = useState(null)
     const [page, setPage] = useState(1)
+    const [show, setShow] = useState(false)
+    const [mainID, setMainID] = useState(0)
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true);
-            const result = await searchResumes(page,search)
+            const result = await searchResumes(page, search)
             setList(result?.res)
             setPagination(result?.pag)
             setIsLoading(false);
@@ -48,6 +55,7 @@ export const ListAllRes = () => {
     }, [search, page]);
     return (
         <>
+            <ModalBlock show={show} setShow={setShow} mainID={mainID}/>
             <h2 className="mb-2">Резюме</h2>
             <InputGroup className="mb-3">
                 <Form.Control
@@ -73,7 +81,7 @@ export const ListAllRes = () => {
                             ?
                             list.map(res => (
                                 <li key={res?.ID} className="mb-3">
-                                    <ResCard res={res}/>
+                                    <ResCard res={res} setShow={setShow} setMainId={setMainID}/>
                                 </li>
                             ))
 
