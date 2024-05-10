@@ -14,7 +14,7 @@ export const VacCard = () => {
             setIsLoading(false);
         };
         fetchData();
-    }, []);
+    });
 
     return (
         <>
@@ -29,10 +29,16 @@ export const VacCard = () => {
                         <div>Loading ...</div>
                     ) : (
                         <>
-                            <h4 className="mb-2">Работодатель:</h4>
-                            <p className="mb-1">Имя: {empl?.name}</p>
-                            <p className="mb-1">Почта: {empl?.email}</p>
-                            <p className="mb-1">Телеграмм: {empl?.telegram}</p>
+                            <h4 className="mb-2">{empl?.name}</h4>
+                            <p className="mb-1">{empl?.description}</p>
+                            <p className="mb-1">
+                                <span className="fw-medium me-1">Почта:</span>
+                                {empl?.email}
+                            </p>
+                            <p className="mb-1">
+                                <span className="fw-medium me-1">Телеграмм:</span>
+                                {empl?.telegram}
+                            </p>
                             <Link to={`user/${empl?.ID}`}>Подробнее о работодателе...</Link>
                         </>
                     )}

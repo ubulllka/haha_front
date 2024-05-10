@@ -14,7 +14,7 @@ export const ResCard = () => {
             setIsLoading(false);
         };
         fetchData();
-    }, []);
+    });
 
     return (
         <>

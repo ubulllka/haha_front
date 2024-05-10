@@ -2,13 +2,13 @@ import {checkAuth} from "./helper";
 
 const baseUrl = "http://localhost:8080/api/vac/"
 
-export async function getAllVacancies() {
-    const result = await fetch(`${baseUrl}`)
-    return result.json()
-}
+// export async function getAllVacancies() {
+//     const result = await fetch(`${baseUrl}`)
+//     return result.json()
+// }
 
-export async function searchVacancies(q) {
-    const url = baseUrl + `search?q=${q}`
+export async function searchVacancies(page, q) {
+    const url = baseUrl + `search?page=${page}&q=${q}`
     const result = await fetch(`${url}`)
     return result.json()
 }

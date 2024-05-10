@@ -2,7 +2,7 @@ import {Route, RouterProvider, createBrowserRouter, createRoutesFromElements} fr
 import {Layout} from './components/Layout';
 import {HomePage} from "./pages/HomePage";
 import {NotFoundPage} from "./pages/NotFoundPage";
-import {listAllResLoader, listAllVacLoader, ListPage} from "./pages/ListPage";
+import {ListPage} from "./pages/ListPage";
 import {RegPage, regAction} from "./pages/RegPage";
 import {logAction, LogPage} from "./pages/LogPage";
 import {useDispatch} from 'react-redux';
@@ -21,9 +21,9 @@ const Index = () => {
                 ({request}) => logAction(request, dispatch)
             }/>
             <Route path='/prof' element={<ProfilePage/>} loader={infoLoader}/>
-            <Route path='/vac' element={<ListPage type={"allVac"}/>} loader={listAllVacLoader}/>
+            <Route path='/vac' element={<ListPage type={"allVac"}/>}/>
             <Route path='/vac/:id' element={<CardPage type={"vac"}/>} loader={vacancyLoader}/>
-            <Route path='/res' element={<ListPage type={"allRes"}/>} loader={listAllResLoader}/>
+            <Route path='/res' element={<ListPage type={"allRes"}/>}/>
             <Route path='/res/:id' element={<CardPage type={"res"}/>} loader={resumeLoader}/>
         </Route>
     ))

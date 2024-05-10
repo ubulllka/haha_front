@@ -45,3 +45,7 @@ a {
     text-decoration: inherit;
     color: inherit;
 }
+
+.page-link{
+    height: 100% !important;
+}
