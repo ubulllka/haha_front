@@ -49,3 +49,15 @@ a {
 .page-link{
     height: 100% !important;
 }
+
+.respond-letter{
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    display: -webkit-box;
+    overflow-y: hidden;
+    cursor: pointer;
+}
+.respond-letter.active{
+    display: block;
+    overflow-y: auto;
+}

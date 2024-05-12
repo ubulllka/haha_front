@@ -4,11 +4,10 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import {useEffect, useState} from "react";
 import {PagBlock} from "../Pag";
-import {ModalBlock} from "../ModalBlock";
 import {getList} from "../../services/UserService";
 import {searchVacancies} from "../../services/VacancyService";
 import {VacCard} from "./VacCard";
-
+import {ModalBlockRole} from "../modal/ModalBlockRole";
 
 export const ListAllVac = () => {
     const [isLoading, setIsLoading] = useState(true)
@@ -51,15 +50,7 @@ export const ListAllVac = () => {
         <>
             {
                 (!isLoadListRes && role === "APPLICANT") &&
-                <ModalBlock
-                    list={listRes}
-                    show={show}
-                    setShow={setShow}
-                    modalId={modalId}
-                    head={"Отклик на вакансию"}
-                    head1={"Выберите резюме, которое хотите отправить работодателю"}
-                    not={"У вас нет еще ни одного резюме ;-(. Но вы легко можете его создать в своём профиле!"}
-                />
+                <ModalBlockRole list={listRes} show={show} setShow={setShow} modalId={modalId} />
             }
 
             <h2 className="mb-2">Вакансии</h2>
@@ -97,8 +88,9 @@ export const ListAllVac = () => {
                 </ul>
             )}
             {
-                (!isLoading && list && list?.length) &&
-                <PagBlock pag={pagination} setPage={setPage}/>
+                (!isLoading && list && list?.length) ?
+                    <PagBlock pag={pagination} setPage={setPage}/>
+                    : ""
             }
         </>
     )

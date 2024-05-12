@@ -5,9 +5,9 @@ import Button from "react-bootstrap/Button";
 import {useEffect, useState} from "react";
 import {searchResumes} from "../../services/ResumeService";
 import {PagBlock} from "../Pag";
-import {ModalBlock} from "../ModalBlock";
 import {getList} from "../../services/UserService";
 import {ResCard} from "./ResCard";
+import {ModalBlockRole} from "../modal/ModalBlockRole";
 
 
 export const ListAllRes = () => {
@@ -51,15 +51,7 @@ export const ListAllRes = () => {
         <>
             {
                 (!isLoadListVac && role === "EMPLOYER") &&
-                <ModalBlock
-                    list={listVac}
-                    show={show}
-                    setShow={setShow}
-                    modalId={modalId}
-                    head={"Отклик на резюме"}
-                    head1={"Выберите вакансию, которую хотите отправить соискателю"}
-                    not={"У вас нет еще ни одной вакансии ;-(. Но вы легко можете её создать в своём профиле!"}
-                />
+                <ModalBlockRole list={listVac} show={show} setShow={setShow} modalId={modalId} />
             }
 
             <h2 className="mb-2">Резюме</h2>
@@ -87,7 +79,7 @@ export const ListAllRes = () => {
                             ?
                             list.map(res => (
                                 <li key={res?.ID} className="mb-3">
-                                    <ResCard res={res} setShow={setShow} setModalId={setModalId}/>
+                                    <ResCard res={res} setShow={setShow} setModalId={setModalId} prof={false}/>
                                 </li>
                             ))
 
@@ -97,8 +89,9 @@ export const ListAllRes = () => {
                 </ul>
             )}
             {
-                (!isLoading && list && list?.length) &&
-                <PagBlock pag={pagination} setPage={setPage}/>
+                (!isLoading && list && list?.length) ?
+                    <PagBlock pag={pagination} setPage={setPage}/>
+                    : ""
             }
         </>
     )

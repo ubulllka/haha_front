@@ -31,6 +31,17 @@ export async function getUser(id) {
     return result.json()
 }
 
+export async function isUser(id, token) {
+    const url = baseUrl + id +"/is"
+    const result = await fetch(`${url}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer " + token,
+        },
+    })
+    return checkAuth(result) ? result.json() : null
+}
+
 export async function getList(token) {
     const url = baseUrl + "list"
     const result = await fetch(`${url}`, {

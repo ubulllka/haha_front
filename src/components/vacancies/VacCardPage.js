@@ -1,15 +1,20 @@
 import {useEffect, useState} from "react";
-import {getList, getUser} from "../../services/UserService";
+import {getList, getUser, isUser} from "../../services/UserService";
 import {Link} from "react-router-dom";
 import {getVacancy} from "../../services/VacancyService";
-import {ModalBlock} from "../ModalBlock";
+import {ModalBlock} from "../modal/ModalBlock";
 import {useSelector} from "react-redux";
 import Button from "react-bootstrap/Button";
+import {UserInfo} from "../user/UserInfo";
+import {ModalBlockRole} from "../modal/ModalBlockRole";
 
 export const VacCardPage = ({id}) => {
+    const role = useSelector((state) => state.user.role)
+    const token = useSelector((state) => state.user.token)
     const [vac, setVac] = useState(null)
     const [isLoading, setIsLoading] = useState(false);
     const [empl, setEmpl] = useState(null);
+    const [myprof, setMyprof] = useState(false)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -18,6 +23,10 @@ export const VacCardPage = ({id}) => {
             setVac(vacRes)
             const result = await getUser(vacRes?.employer_id);
             setEmpl(result);
+            if (token !== "") {
+                const myprofRes = await isUser(result?.ID, token)
+                setMyprof(myprofRes?.status === "true")
+            }
             setIsLoading(false);
         };
         fetchData();
@@ -27,8 +36,7 @@ export const VacCardPage = ({id}) => {
     const [modalId, setModalId] = useState(0)
     const [isLoadListRes, setIsLoadListRes] = useState(true)
     const [listRes, setListRes] = useState(null)
-    const role = useSelector((state) => state.user.role)
-    const token = useSelector((state) => state.user.token)
+
 
     useEffect(() => {
         const fetchData = async () => {
@@ -46,47 +54,34 @@ export const VacCardPage = ({id}) => {
         <>
             {
                 (!isLoadListRes && role === "APPLICANT") &&
-                <ModalBlock
-                    list={listRes}
-                    show={show}
-                    setShow={setShow}
-                    modalId={modalId}
-                    head={"Отклик на вакансию"}
-                    head1={"Выберите резюме, которое хотите отправить работодателю"}
-                    not={"У вас нет еще ни одного резюме ;-(. Но вы легко можете его создать в своём профиле!"}
-                />
+                <ModalBlockRole list={listRes} show={show} setShow={setShow} modalId={modalId} />
             }
             <h2>Вакансия</h2>
             {isLoading ? (
                 <div>Loading ...</div>
             ) : (
                 <div className="row">
-                    <div className="col-md-6">
+                    <div className="col-lg-8">
                         <h3 className="mb-2">{vac?.post}</h3>
                         <p className="mb-1">{vac?.description}</p>
+
+                    </div>
+                    <div className="col-lg-4">
                         {
                             (role === "APPLICANT") &&
-                            <Button className="mt-2" onClick={() => {
+                            <Button className="mt-2 mb-3" onClick={() => {
                                 setShow(true)
                                 setModalId(vac?.ID)
-                            }}>Откликнуться</Button>
+                            }}>Откликнуться на вакансию</Button>
                         }
-                    </div>
-                    {
+                        <UserInfo user={empl} />
+                        {
+                            (myprof) ?
+                                <Link to={`/prof`}>Подробнее о работодателе...</Link>
+                                :
+                                <Link to={`/user/${empl?.ID}`}>Подробнее о работодателе...</Link>
+                        }
 
-                    }
-                    <div className="col-md-6">
-                        <h4 className="mb-2">{empl?.name}</h4>
-                        <p className="mb-1">{empl?.description}</p>
-                        <p className="mb-1">
-                            <span className="fw-medium me-1">Почта:</span>
-                            {empl?.email}
-                        </p>
-                        <p className="mb-1">
-                            <span className="fw-medium me-1">Телеграмм:</span>
-                            {empl?.telegram}
-                        </p>
-                        <Link to={`/user/${empl?.ID}`}>Подробнее о работодателе...</Link>
                     </div>
                 </div>
             )}

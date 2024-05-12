@@ -5,7 +5,7 @@ import {useSelector} from "react-redux";
 import {ResCard} from "../components/resumes/ResCard";
 import {VacCard} from "../components/vacancies/VacCard";
 import {PagBlock} from "../components/Pag";
-import {ModalBlock} from "../components/ModalBlock";
+import {ModalBlock} from "../components/modal/ModalBlock";
 import {UserInfo} from "../components/user/UserInfo";
 
 
@@ -83,7 +83,6 @@ export const UserPage = () => {
             {
                 (!isLoadListMod) &&
                 <GetModalBlock role={role} list={listMod} show={show} setShow={setShow} modalId={modalId}/>
-
             }
             {(isLoading) ?
                 <p>Loading...</p>
@@ -110,9 +109,9 @@ export const UserPage = () => {
                                     <li key={item?.ID} className="mb-3">
                                         {
                                             (user?.role === "APPLICANT") ?
-                                                <ResCard res={item} setShow={setShow} setModalId={setModalId}/>
+                                                <ResCard res={item} setShow={setShow} setModalId={setModalId} prof={false}/>
                                                 :
-                                                <VacCard vac={item} setShow={setShow} setModalId={setModalId}/>
+                                                <VacCard vac={item} setShow={setShow} setModalId={setModalId} prof={false}/>
                                         }
 
                                     </li>
@@ -125,8 +124,9 @@ export const UserPage = () => {
                 </>
             }
             {
-                (!isLoading && list && list?.length) &&
-                <PagBlock pag={pagination} setPage={setPage}/>
+                (!isLoading && list && list?.length) ?
+                    <PagBlock pag={pagination} setPage={setPage}/>
+                    : ""
             }
         </>
     )

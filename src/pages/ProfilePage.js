@@ -28,10 +28,17 @@ export const ProfilePage = () => {
                 <>
                     <div className="row">
                         <div className="col-md-6">
-                            <UserInfo user={user}/>
+                            <UserInfo user={user} prof={true}/>
                         </div>
                         <div className="col-md-6">
-                            <Button variant="warning">Редактировать</Button>
+                            <Button variant={"warning"} className="me-2">Редактировать</Button>
+                            {
+                                (user?.role === "APPLICANT") ?
+                                    <Button variant={"success"}>Добавить резюме</Button>
+                                    :
+                                    <Button variant={"success"}>Добавить вакансию</Button>
+                            }
+
                         </div>
                     </div>
                     <UserTabs/>

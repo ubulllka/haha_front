@@ -5,6 +5,8 @@ import {PagBlock} from "../Pag";
 import {ResCard} from "../resumes/ResCard";
 import {VacCard} from "../vacancies/VacCard";
 import {useSelector} from "react-redux";
+import {FilterTab} from "./FilterTab";
+import {getMyRespond, getOtherRespond} from "../../services/RespondService";
 
 export const UserTabs = ({id}) => {
     const [isLoading, setIsLoding] = useState(true)
@@ -47,9 +49,9 @@ export const UserTabs = ({id}) => {
                                     <li key={item?.ID} className="mb-3">
                                         {
                                             (role === "APPLICANT") ?
-                                                <ResCard res={item} close={true}/>
+                                                <ResCard res={item} prof={true} close={true}/>
                                                 :
-                                                <VacCard vac={item} close={true} />
+                                                <VacCard vac={item} prof={true} close={true} />
                                         }
 
                                     </li>
@@ -62,15 +64,16 @@ export const UserTabs = ({id}) => {
                 }
 
                 {
-                    (!isLoading && list && list?.length) &&
-                    <PagBlock pag={pagination} setPage={setPage}/>
+                    (!isLoading && list && list?.length) ?
+                        <PagBlock pag={pagination} setPage={setPage}/>
+                        : ""
                 }
             </Tab>
             <Tab eventKey="myrespond" title="Мои отклики">
-                Tab content for Profile
+                <FilterTab type={"my"} funcForGetData={getMyRespond}/>
             </Tab>
             <Tab eventKey="otherrespond" title="Отклики мне">
-                Tab content for Contact
+                <FilterTab type={"other"} funcForGetData={getOtherRespond}/>
             </Tab>
         </Tabs>
     )
