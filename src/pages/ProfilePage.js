@@ -19,7 +19,7 @@ export const ProfilePage = () => {
             setIsLoading(false)
         };
         fetchData();
-    }, []);
+    }, [token]);
     return (
         <>
             {(isLoading) ?

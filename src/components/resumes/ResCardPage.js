@@ -1,13 +1,25 @@
 import {useEffect, useState} from "react";
 import {getList, getUser, isUser} from "../../services/UserService";
 import {Link} from "react-router-dom";
-import {getResume} from "../../services/ResumeService";
+import {getResume, getResumeAnon} from "../../services/ResumeService";
 import {useSelector} from "react-redux";
 import {UserInfo} from "../user/UserInfo";
-import {ModalBlock} from "../modal/ModalBlock";
 import Button from "react-bootstrap/Button";
 import {ModalBlockRole} from "../modal/ModalBlockRole";
 
+
+const GetStatus = ({status}) => {
+    switch (status) {
+        case "WAIT":
+            return (<h3 className="text-secondary d-inline-block me-2">Cтатус: Ожидание</h3>)
+        case "ACCEPT":
+            return (<h3 className="text-success d-inline-block me-2">Cтатус: Принято</h3>)
+        case "DECLINE":
+            return (<h3 className="text-danger d-inline-block me-2">Cтатус: Отклонено</h3>)
+        default:
+            return
+    }
+}
 export const ResCardPage = ({id}) => {
     const role = useSelector((state) => state.user.role)
     const token = useSelector((state) => state.user.token)
@@ -20,7 +32,9 @@ export const ResCardPage = ({id}) => {
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true);
-            const resRes = await getResume(id)
+            const resRes = (role === "EMPLOYER")
+                ? await getResume(id, token)
+                : await getResumeAnon(id)
             setRes(resRes)
             const result = await getUser(resRes?.applicant_id);
             setAppl(result);
@@ -31,7 +45,7 @@ export const ResCardPage = ({id}) => {
             setIsLoading(false);
         };
         fetchData();
-    }, []);
+    }, [id, role, token]);
 
     const [show, setShow] = useState(false)
     const [modalId, setModalId] = useState(0)
@@ -49,7 +63,7 @@ export const ResCardPage = ({id}) => {
             setIsLoadListRes(false);
         };
         fetchData();
-    }, [])
+    }, [role, token])
 
     return (
         <>
@@ -68,11 +82,17 @@ export const ResCardPage = ({id}) => {
                     </div>
                     <div className="col-lg-4">
                         {
-                            (role === "EMPLOYER") &&
-                            <Button className="mt-2 mb-3" onClick={() => {
-                                setShow(true)
-                                setModalId(res?.ID)
-                            }}>Откликнуться на резюме</Button>
+                            (role === "EMPLOYER") && (res?.status === "")
+                                ?
+                                <Button className="mt-2 mb-3" onClick={() => {
+                                    setShow(true)
+                                    setModalId(res?.ID)
+                                }}>Откликнуться на резюме</Button>
+                                :
+                                (res?.status !== "") &&
+                                <div className="gap-1">
+                                    <GetStatus status={res?.status}/>
+                                </div>
                         }
                         <UserInfo user={appl}/>
                         {

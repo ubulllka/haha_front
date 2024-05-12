@@ -3,7 +3,7 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import {useEffect, useState} from "react";
-import {searchResumes} from "../../services/ResumeService";
+import {searchResumes, searchResumesAnon} from "../../services/ResumeService";
 import {PagBlock} from "../Pag";
 import {getList} from "../../services/UserService";
 import {ResCard} from "./ResCard";
@@ -34,24 +34,26 @@ export const ListAllRes = () => {
             setIsLoadListVac(false);
         };
         fetchData();
-    }, [])
+    }, [role, token])
 
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true);
-            const result = await searchResumes(page, search)
+            const result = (role === "EMPLOYER")
+                ? await searchResumes(page, search, token)
+                : await searchResumesAnon(page, search)
             setList(result?.list)
             setPagination(result?.pag)
             setIsLoading(false);
         };
         fetchData();
-    }, [search, page]);
+    }, [search, page, role, token]);
 
     return (
         <>
             {
                 (!isLoadListVac && role === "EMPLOYER") &&
-                <ModalBlockRole list={listVac} show={show} setShow={setShow} modalId={modalId} />
+                <ModalBlockRole list={listVac} show={show} setShow={setShow} modalId={modalId}/>
             }
 
             <h2 className="mb-2">Резюме</h2>

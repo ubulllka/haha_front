@@ -56,7 +56,7 @@ export const UserPage = () => {
             setIsLoadListMod(false);
         };
         fetchData();
-    }, [])
+    }, [token])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -66,7 +66,7 @@ export const UserPage = () => {
             setIsLoding(false);
         };
         fetchData();
-    }, [])
+    }, [id])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -77,7 +77,7 @@ export const UserPage = () => {
             setIsLoadList(false);
         };
         fetchData();
-    }, [page])
+    }, [page, id])
     return (
         <>
             {

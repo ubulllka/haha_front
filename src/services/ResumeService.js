@@ -1,21 +1,43 @@
 import {checkAuth} from "./helper";
 
 const baseUrl = "http://localhost:8080/api/res/"
+const baseUrlAnon = "http://localhost:8080/api/resa/"
 
 // export async function getAllResumes() {
 //     const result = await fetch(`${baseUrl}`)
 //     return result.json()
 // }
 
-export async function searchResumes(page, q) {
-    const url = baseUrl + `search?page=${page}&q=${q}`
+export async function searchResumesAnon(page, q) {
+    const url = baseUrlAnon + `search?page=${page}&q=${q}`
     const result = await fetch(`${url}`)
     return result.json()
 }
 
-export async function getResume(id) {
-    const url = baseUrl + id
+export async function getResumeAnon(id) {
+    const url = baseUrlAnon + id
     const result = await fetch(`${url}`)
+    return result.json()
+}
+export async function searchResumes(page, q, token) {
+    const url = baseUrl + `search?page=${page}&q=${q}`
+    const result = await fetch(`${url}`, {
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer " + token,
+        },
+    })
+    return result.json()
+}
+
+export async function getResume(id, token) {
+    const url = baseUrl + id
+    const result = await fetch(`${url}`,{
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer " + token,
+        },
+    })
     return result.json()
 }
 

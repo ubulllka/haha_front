@@ -1,21 +1,41 @@
 import {checkAuth} from "./helper";
 
 const baseUrl = "http://localhost:8080/api/vac/"
+const baseUrlAnon = "http://localhost:8080/api/vaca/"
 
 // export async function getAllVacancies() {
 //     const result = await fetch(`${baseUrl}`)
 //     return result.json()
 // }
 
-export async function searchVacancies(page, q) {
-    const url = baseUrl + `search?page=${page}&q=${q}`
+export async function searchVacanciesAnon(page, q) {
+    const url = baseUrlAnon + `search?page=${page}&q=${q}`
     const result = await fetch(`${url}`)
     return result.json()
 }
 
-export async function getVacancy(id) {
-    const url = baseUrl + id
+export async function getVacancyAnon(id) {
+    const url = baseUrlAnon + id
     const result = await fetch(`${url}`)
+    return result.json()
+}
+export async function searchVacancies(page, q, token) {
+    const url = baseUrl + `search?page=${page}&q=${q}`
+    const result = await fetch(`${url}`,{headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer " + token,
+        },})
+    return result.json()
+}
+
+export async function getVacancy(id, token) {
+    const url = baseUrl + id
+    const result = await fetch(`${url}`,{
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': "Bearer " + token,
+        },
+    })
     return result.json()
 }
 

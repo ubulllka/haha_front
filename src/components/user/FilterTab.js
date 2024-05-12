@@ -1,18 +1,14 @@
 import {useSelector} from "react-redux";
 import {useEffect, useState} from "react";
-import {ResCard} from "../resumes/ResCard";
-import {VacCard} from "../vacancies/VacCard";
 import {PagBlock} from "../Pag";
 import {RespondCard} from "../RespondCard";
 
 export const FilterTab = ({funcForGetData, type}) => {
-    const role = useSelector((state) => state.user.role)
     const token = useSelector((state) => state.user.token)
     const [isLoading, setIsLoading] = useState(true)
     const [list, setList] = useState(null)
     const [pagination, setPagination] = useState(null)
     const [page, setPage] = useState(1)
-
 
     const arr = [
         {label: "Ожидание", value: "WAIT"},
@@ -43,7 +39,7 @@ export const FilterTab = ({funcForGetData, type}) => {
             setIsLoading(false);
         };
         fetchData();
-    }, [page, selectedOptions]);
+    }, [page, selectedOptions, funcForGetData, token]);
 
 
     return (

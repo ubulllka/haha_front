@@ -29,6 +29,8 @@ const GetFooter = ({type, status}) => {
                     </>
 
                 )
+            default:
+                return
         }
     } else {
         switch (status) {
@@ -54,6 +56,8 @@ const GetFooter = ({type, status}) => {
                     </>
 
                 )
+            default:
+                return
         }
     }
 }

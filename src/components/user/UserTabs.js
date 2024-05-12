@@ -1,6 +1,6 @@
 import {Tab, Tabs} from "react-bootstrap";
 import {useEffect, useState} from "react";
-import {getListPag, getMyListPag} from "../../services/UserService";
+import {getMyListPag} from "../../services/UserService";
 import {PagBlock} from "../Pag";
 import {ResCard} from "../resumes/ResCard";
 import {VacCard} from "../vacancies/VacCard";
@@ -30,7 +30,7 @@ export const UserTabs = ({id}) => {
             setIsLoding(false);
         };
         fetchData();
-    }, [page])
+    }, [page, token])
     return (
         <Tabs
             defaultActiveKey="mylist"

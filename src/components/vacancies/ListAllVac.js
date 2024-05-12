@@ -5,7 +5,7 @@ import Button from "react-bootstrap/Button";
 import {useEffect, useState} from "react";
 import {PagBlock} from "../Pag";
 import {getList} from "../../services/UserService";
-import {searchVacancies} from "../../services/VacancyService";
+import {searchVacancies, searchVacanciesAnon} from "../../services/VacancyService";
 import {VacCard} from "./VacCard";
 import {ModalBlockRole} from "../modal/ModalBlockRole";
 
@@ -33,24 +33,26 @@ export const ListAllVac = () => {
             setIsLoadListRes(false);
         };
         fetchData();
-    }, [])
+    }, [role, token])
 
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true);
-            const result = await searchVacancies(page, search)
+            const result = (role === "APPLICANT")
+                ? await searchVacancies(page, search, token)
+                : await searchVacanciesAnon(page, search)
             setList(result?.list)
             setPagination(result?.pag)
             setIsLoading(false);
         };
         fetchData();
-    }, [search, page]);
+    }, [search, page, role, token]);
 
     return (
         <>
             {
                 (!isLoadListRes && role === "APPLICANT") &&
-                <ModalBlockRole list={listRes} show={show} setShow={setShow} modalId={modalId} />
+                <ModalBlockRole list={listRes} show={show} setShow={setShow} modalId={modalId}/>
             }
 
             <h2 className="mb-2">Вакансии</h2>
