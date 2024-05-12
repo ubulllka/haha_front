@@ -1,24 +1,43 @@
 import {getInfo} from "../services/UserService";
 import {useSelector} from "react-redux";
-import {defer, useLoaderData, Await} from "react-router-dom"
-import {Suspense} from "react"
+import React, {useEffect, useState} from "react";
+import Button from "react-bootstrap/Button";
+import {UserInfo} from "../components/user/UserInfo";
+import {UserTabs} from "../components/user/UserTabs";
+
 
 export const ProfilePage = () => {
     const token = useSelector((state) => state.user.token)
-    const user = useLoaderData(token);
-    return (
-        <Suspense fallback={<h3>Loading...</h3>}>
-            <Await resolve={user}>
-                <p>{user?.name}</p>
-                <p>{user?.email}</p>
-                <p>{user?.telegram}</p>
-            </Await>
-        </Suspense>
-    )
-}
+    const [isLoading, setIsLoading] = useState(true)
+    const [user, setUser] = useState(null)
 
-export const infoLoader = async (token) => {
-    return defer({
-        user: getInfo(token)
-    })
+    useEffect(() => {
+        const fetchData = async () => {
+            setIsLoading(true);
+            const result = await getInfo(token)
+            setUser(result)
+            setIsLoading(false)
+        };
+        fetchData();
+    }, []);
+    return (
+        <>
+            {(isLoading) ?
+                <p>Loading...</p>
+                :
+                <>
+                    <div className="row">
+                        <div className="col-md-6">
+                            <UserInfo user={user}/>
+                        </div>
+                        <div className="col-md-6">
+                            <Button variant="warning">Редактировать</Button>
+                        </div>
+                    </div>
+                    <UserTabs/>
+                </>
+            }
+        </>
+
+    )
 }

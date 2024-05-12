@@ -1,49 +1,62 @@
-import {useState} from 'react';
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
+import Form from 'react-bootstrap/Form';
+import {Link} from "react-router-dom"
 
-export const ModalBlock = ({show, mainID, list, setShow}) => {
+const ModalSelect = ({list}) => {
+    return (
+        <select className="form-select" name="my_id">
+            {
+                list.map(item => (
+                    <option key={item?.id} value={item?.id}>
+                        {item?.post}
+                    </option>
+                ))
+            }
+        </select>
+    )
+}
 
+export const ModalBlock = ({list, show, setShow, modalId, head, head1, not}) => {
 
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
     return (
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <Modal.Title>Modal heading</Modal.Title>
+                <Modal.Title>{head}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Form.Group >
-                        <Form.Control
-                            type="text"
-                            value={mainID}
-                        />
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-                        <Form.Label>lals</Form.Label>
-                        <Form.Control
-                            type="text"
-                            autoFocus
-                        />
-                    </Form.Group>
-                    <Form.Group
-                        className="mb-3"
-                        controlId="exampleForm.ControlTextarea1"
-                    >
-                        <Form.Label>Example textarea</Form.Label>
-                        <Form.Control as="textarea" rows={3}/>
-                    </Form.Group>
+                    <input hidden={true} defaultValue={modalId} type="text" name="modal_id"/>
+                    {
+                        (list && list?.length)
+                            ?
+                            <>
+                                <label className="mb-2 w-100">
+                                    <p className="mb-1 form-label">{head1}</p>
+                                    <ModalSelect list={list}/>
+                                </label>
+                                <label className="mb-2 w-100">
+                                    <p className="mb-1 form-label">Напишите сопроводительное письмо:</p>
+                                    <textarea className="form-control" rows="3" name="letter"/>
+                                </label>
+                            </>
+                            :
+                            <>
+                                <p className="m-auto">{not}</p>
+                                <Button className="mt-1 d-block m-auto" variant="outline-success">
+                                    <Link to="/prof" className="text-decoration-none">Перейти в профиль</Link>
+                                </Button>
+                            </>
+                    }
                 </Form>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
-                    Close
+                    Закрыть
                 </Button>
-                <Button variant="primary" onClick={handleClose}>
-                    Save Changes
+                <Button variant="primary" disabled={!(list && list?.length)} onClick={handleClose}>
+                    Отправить
                 </Button>
             </Modal.Footer>
         </Modal>

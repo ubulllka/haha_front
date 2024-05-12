@@ -1,53 +1,67 @@
 import {useSelector} from "react-redux";
-import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import {useEffect, useState} from "react";
-import {searchVacancies} from "../../services/VacancyService";
 import {PagBlock} from "../Pag";
-import {getDateStr} from "../getDataStr";
+import {ModalBlock} from "../ModalBlock";
+import {getList} from "../../services/UserService";
+import {searchVacancies} from "../../services/VacancyService";
+import {VacCard} from "./VacCard";
 
-
-const VacCard = ({vac}) => {
-    const role = useSelector((state) => state.user.role)
-    return (
-        <Card>
-            <Card.Body>
-                <Card.Title>{vac?.post}</Card.Title>
-                <Card.Text>
-                    {vac?.description}
-                </Card.Text>
-            </Card.Body>
-            <Card.Footer className="text-muted d-flex justify-content-between">
-                <Card.Link href={`/vac/${vac?.ID}`}>
-                    Подробнее...
-                </Card.Link>
-                <p className="mb-0">{getDateStr(vac?.CreatedAt)} </p>
-            </Card.Footer>
-        </Card>
-    )
-}
 
 export const ListAllVac = () => {
-    const [isLoading, setIsLoading] = useState(true);
-    const [list, setList] = useState(null);
+    const [isLoading, setIsLoading] = useState(true)
+    const [list, setList] = useState(null)
     const [query, setQuery] = useState("")
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState("")
     const [pagination, setPagination] = useState(null)
     const [page, setPage] = useState(1)
+    const [show, setShow] = useState(false)
+    const [modalId, setModalId] = useState(0)
+    const [isLoadListRes, setIsLoadListRes] = useState(true)
+    const [listRes, setListRes] = useState(null)
+    const role = useSelector((state) => state.user.role)
+    const token = useSelector((state) => state.user.token)
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setIsLoadListRes(true);
+            if (role === "APPLICANT") {
+                const result = await getList(token)
+                setListRes(result)
+            }
+            setIsLoadListRes(false);
+        };
+        fetchData();
+    }, [])
+
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true);
             const result = await searchVacancies(page, search)
-            setList(result?.vac)
+            setList(result?.list)
             setPagination(result?.pag)
-            setIsLoading(false)
+            setIsLoading(false);
         };
         fetchData();
     }, [search, page]);
+
     return (
         <>
+            {
+                (!isLoadListRes && role === "APPLICANT") &&
+                <ModalBlock
+                    list={listRes}
+                    show={show}
+                    setShow={setShow}
+                    modalId={modalId}
+                    head={"Отклик на вакансию"}
+                    head1={"Выберите резюме, которое хотите отправить работодателю"}
+                    not={"У вас нет еще ни одного резюме ;-(. Но вы легко можете его создать в своём профиле!"}
+                />
+            }
+
             <h2 className="mb-2">Вакансии</h2>
             <InputGroup className="mb-3">
                 <Form.Control
@@ -73,7 +87,7 @@ export const ListAllVac = () => {
                             ?
                             list.map(vac => (
                                 <li key={vac?.ID} className="mb-3">
-                                    <VacCard vac={vac}/>
+                                    <VacCard vac={vac} setShow={setShow} setModalId={setModalId}/>
                                 </li>
                             ))
 
@@ -82,7 +96,6 @@ export const ListAllVac = () => {
                     }
                 </ul>
             )}
-
             {
                 (!isLoading && list && list?.length) &&
                 <PagBlock pag={pagination} setPage={setPage}/>

@@ -10,8 +10,7 @@ import {setUser} from "../features/user/userSlice";
 
 export const Header = () => {
     const role = useSelector((state) => state.user.role)
-    const role1 = useSelector((state) => state.user.role)
-    console.log(role1)
+    console.log(role)
     let navigate = useNavigate()
     const dispatch = useDispatch()
     const exit = () => {
@@ -57,9 +56,9 @@ export const Header = () => {
 
                                 :
                                 <>
-                                    <Button variant="outline-success">
-                                        <Link className="header__link" to="/prof">Профиль</Link>
-                                    </Button>
+                                    <Link className="header__link" to="/prof">
+                                        <Button variant="outline-success">Профиль</Button>
+                                    </Link>
                                     <Button variant="outline-danger"
                                             onClick={exit}
                                     >Выйти</Button>

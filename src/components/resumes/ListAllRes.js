@@ -1,38 +1,14 @@
 import {useSelector} from "react-redux";
-import Card from "react-bootstrap/Card";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import {useEffect, useState} from "react";
 import {searchResumes} from "../../services/ResumeService";
-import {getDateStr} from "../getDataStr";
 import {PagBlock} from "../Pag";
 import {ModalBlock} from "../ModalBlock";
+import {getList} from "../../services/UserService";
+import {ResCard} from "./ResCard";
 
-
-const ResCard = ({res, setShow, setMainId}) => {
-    const role = useSelector((state) => state.user.role)
-    return (
-        <Card>
-            <Card.Body>
-                <Card.Title>{res?.post}</Card.Title>
-                <Card.Text>
-                    {res?.description}
-                </Card.Text>
-            </Card.Body>
-            <Card.Footer className="text-muted d-flex justify-content-between">
-                <Card.Link href={`/res/${res?.ID}`}>
-                    Подробнее...
-                </Card.Link>
-                <Button onClick={() => {
-                        setShow(true)
-                        setMainId(res?.ID)
-                }}>Откликнуться</Button>
-                <p className="mb-0">{getDateStr(res?.CreatedAt)}</p>
-            </Card.Footer>
-        </Card>
-    )
-}
 
 export const ListAllRes = () => {
     const [isLoading, setIsLoading] = useState(true)
@@ -42,20 +18,50 @@ export const ListAllRes = () => {
     const [pagination, setPagination] = useState(null)
     const [page, setPage] = useState(1)
     const [show, setShow] = useState(false)
-    const [mainID, setMainID] = useState(0)
+    const [modalId, setModalId] = useState(0)
+    const [isLoadListVac, setIsLoadListVac] = useState(true)
+    const [listVac, setListVac] = useState(null)
+    const role = useSelector((state) => state.user.role)
+    const token = useSelector((state) => state.user.token)
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setIsLoadListVac(true);
+            if (role === "EMPLOYER") {
+                const result = await getList(token)
+                setListVac(result)
+            }
+            setIsLoadListVac(false);
+        };
+        fetchData();
+    }, [])
+
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true);
             const result = await searchResumes(page, search)
-            setList(result?.res)
+            setList(result?.list)
             setPagination(result?.pag)
             setIsLoading(false);
         };
         fetchData();
     }, [search, page]);
+
     return (
         <>
-            <ModalBlock show={show} setShow={setShow} mainID={mainID}/>
+            {
+                (!isLoadListVac && role === "EMPLOYER") &&
+                <ModalBlock
+                    list={listVac}
+                    show={show}
+                    setShow={setShow}
+                    modalId={modalId}
+                    head={"Отклик на резюме"}
+                    head1={"Выберите вакансию, которую хотите отправить соискателю"}
+                    not={"У вас нет еще ни одной вакансии ;-(. Но вы легко можете её создать в своём профиле!"}
+                />
+            }
+
             <h2 className="mb-2">Резюме</h2>
             <InputGroup className="mb-3">
                 <Form.Control
@@ -81,7 +87,7 @@ export const ListAllRes = () => {
                             ?
                             list.map(res => (
                                 <li key={res?.ID} className="mb-3">
-                                    <ResCard res={res} setShow={setShow} setMainId={setMainID}/>
+                                    <ResCard res={res} setShow={setShow} setModalId={setModalId}/>
                                 </li>
                             ))
 

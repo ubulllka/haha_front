@@ -22,7 +22,7 @@ export async function updateWork(id, work, token) {//post, description, start_ti
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': token,
+            'Authorization': "Bearer " + token,
         },
         body: JSON.stringify(work),
     })
@@ -36,7 +36,7 @@ export async function deleteWork(id, token) {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': token,
+            'Authorization': "Bearer " + token,
         },
     })
     if (result.status !== 200) return null

@@ -24,7 +24,7 @@ export async function createVacancy(vacancy, token) { //post, description
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': token,
+            'Authorization': "Bearer " + token,
         },
         body: JSON.stringify(vacancy),
     })
@@ -38,7 +38,7 @@ export async function updateVacancy(id, vacancy, token) { //post, description
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': token,
+            'Authorization': "Bearer " + token,
         },
         body: JSON.stringify(vacancy),
     })
@@ -52,7 +52,7 @@ export async function deleteVacancy(id, token) {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': token,
+            'Authorization': "Bearer " + token,
         },
     })
     if (result.status !== 200) return null

@@ -1,49 +1,33 @@
-import {useEffect, useState} from "react";
-import {getUser} from "../../services/UserService";
-import {Link, useAsyncValue} from "react-router-dom";
+import {useSelector} from "react-redux";
+import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
+import {getDateStr} from "../getDataStr";
 
-export const VacCard = () => {
-    const vac = useAsyncValue()
-    const [isLoading, setIsLoading] = useState(false);
-    const [empl, setEmpl] = useState(null);
-    useEffect(() => {
-        const fetchData = async () => {
-            setIsLoading(true);
-            const result = await getUser(vac?.employer_id);
-            setEmpl(result);
-            setIsLoading(false);
-        };
-        fetchData();
-    });
-
+export const VacCard = ({vac, setShow, setModalId}) => {
+    const role = useSelector((state) => state.user.role)
     return (
-        <>
-            <h2>Вакансия</h2>
-            <div className="row">
-                <div className="col-md-6">
-                    <h3 className="mb-2">{vac?.post}</h3>
-                    <p className="mb-1">{vac?.description}</p>
+        <Card>
+            <Card.Body>
+                <Card.Title>{vac?.post}</Card.Title>
+                <Card.Text>
+                    {vac?.description}
+                </Card.Text>
+            </Card.Body>
+            <Card.Footer className="text-muted d-flex justify-content-between">
+                <Card.Link href={`/vac/${vac?.ID}`}>
+                    Подробнее...
+                </Card.Link>
+                <div className="d-flex gap-2">
+                    {
+                        (role === "APPLICANT") &&
+                        <Button className="p-0 ps-1 pe-1" onClick={() => {
+                            setShow(true)
+                            setModalId(vac?.ID)
+                        }}>Откликнуться</Button>
+                    }
+                    <p className="mb-0">{getDateStr(vac?.CreatedAt)}</p>
                 </div>
-                <div className="col-md-6">
-                    {isLoading ? (
-                        <div>Loading ...</div>
-                    ) : (
-                        <>
-                            <h4 className="mb-2">{empl?.name}</h4>
-                            <p className="mb-1">{empl?.description}</p>
-                            <p className="mb-1">
-                                <span className="fw-medium me-1">Почта:</span>
-                                {empl?.email}
-                            </p>
-                            <p className="mb-1">
-                                <span className="fw-medium me-1">Телеграмм:</span>
-                                {empl?.telegram}
-                            </p>
-                            <Link to={`user/${empl?.ID}`}>Подробнее о работодателе...</Link>
-                        </>
-                    )}
-                </div>
-            </div>
-        </>
+            </Card.Footer>
+        </Card>
     )
 }

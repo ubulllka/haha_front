@@ -41,6 +41,7 @@ export const logAction = async (request, dispatch) => {
         formSpan.innerHTML = ""
     }
     const user = await singIn(newUser)
+    console.log(user)
     if (user) {
         dispatch(setUser(user))
         return redirect('/')

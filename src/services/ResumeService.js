@@ -24,7 +24,7 @@ export async function createResume(resume, token) { //big gg
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': token,
+            'Authorization': "Bearer " + token,
         },
         body: JSON.stringify(resume),
     })
@@ -38,7 +38,7 @@ export async function updateResume(id, resume, token) { //post, description
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': token,
+            'Authorization': "Bearer " + token,
         },
         body: JSON.stringify(resume),
     })
@@ -52,7 +52,7 @@ export async function deleteResume(id, token) {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': token,
+            'Authorization': "Bearer " + token,
         },
     })
     if (result.status !== 200) return null
