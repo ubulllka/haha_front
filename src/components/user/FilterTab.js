@@ -28,17 +28,16 @@ export const FilterTab = ({funcForGetData, type}) => {
             }
         });
     };
-
+    const fetchDataRespondList = async () => {
+        setIsLoading(true);
+        const result = await funcForGetData(token, page, selectedOptions)
+        setList(result?.list)
+        setPagination(result?.pag)
+        setIsLoading(false);
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            setIsLoading(true);
-            const result = await funcForGetData(token, page, selectedOptions)
-            setList(result?.list)
-            setPagination(result?.pag)
-            setIsLoading(false);
-        };
-        fetchData();
+        fetchDataRespondList();
     }, [page, selectedOptions, funcForGetData, token]);
 
 
@@ -72,7 +71,8 @@ export const FilterTab = ({funcForGetData, type}) => {
                                 ?
                                 list.map(item => (
                                     <li key={item?.id} className="mb-3">
-                                        <RespondCard item={item} type={type}/>
+                                        <RespondCard item={item} type={type}
+                                                     fetchDataRespondList={fetchDataRespondList}/>
                                     </li>
                                 ))
 

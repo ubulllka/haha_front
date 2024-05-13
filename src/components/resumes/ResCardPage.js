@@ -1,11 +1,14 @@
 import {useEffect, useState} from "react";
 import {getList, getUser, isUser} from "../../services/UserService";
 import {Link} from "react-router-dom";
-import {getResume, getResumeAnon} from "../../services/ResumeService";
+import {getResume, getResumeAnon, getResumesWorkListAnon} from "../../services/ResumeService";
 import {useSelector} from "react-redux";
 import {UserInfo} from "../user/UserInfo";
 import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
 import {ModalBlockRole} from "../modal/ModalBlockRole";
+import {getDateStr} from "../getDataStr";
+import {WorkCard} from "../work/WorkCard";
 
 
 const GetStatus = ({status}) => {
@@ -20,6 +23,8 @@ const GetStatus = ({status}) => {
             return
     }
 }
+
+
 export const ResCardPage = ({id}) => {
     const role = useSelector((state) => state.user.role)
     const token = useSelector((state) => state.user.token)
@@ -27,6 +32,7 @@ export const ResCardPage = ({id}) => {
     const [isLoading, setIsLoading] = useState(false);
     const [appl, setAppl] = useState(null);
     const [myprof, setMyprof] = useState(false)
+    const [listWork, setListWork] = useState(null)
 
     //Получение резюме, данных о соискателе, сравнение token с id
     useEffect(() => {
@@ -36,6 +42,8 @@ export const ResCardPage = ({id}) => {
                 ? await getResume(id, token)
                 : await getResumeAnon(id)
             setRes(resRes)
+            const resListWork = await getResumesWorkListAnon(id)
+            setListWork(resListWork)
             const result = await getUser(resRes?.applicant_id);
             setAppl(result);
             if (token !== "") {
@@ -56,7 +64,7 @@ export const ResCardPage = ({id}) => {
     useEffect(() => {
         const fetchData = async () => {
             setIsLoadListRes(true);
-            if (role === "EMPLOYER") {
+            if (role === "EMPLOYER") { //для modalBlock
                 const result = await getList(token)
                 setListRes(result)
             }
@@ -79,6 +87,17 @@ export const ResCardPage = ({id}) => {
                     <div className="col-lg-8">
                         <h3 className="mb-2">{res?.post}</h3>
                         <p className="mb-1">{res?.description}</p>
+                        <h4>Опыт работы:</h4>
+                        <ul className="list-unstyled">
+                            {
+                                (listWork && listWork?.length) ?
+                                    listWork.map((item) => (
+                                        <li key={item?.id}>
+                                            <WorkCard item={item}/>
+                                        </li>
+                                    )) : <li>Список пуст ;-(</li>
+                            }
+                        </ul>
                     </div>
                     <div className="col-lg-4">
                         {
@@ -96,7 +115,7 @@ export const ResCardPage = ({id}) => {
                         }
                         <UserInfo user={appl}/>
                         {
-                            (myprof) ?
+                            (token !== "") && (myprof) ?
                                 <Link to={`/prof`}>Подробнее о соискателе...</Link>
                                 :
                                 <Link to={`/user/${appl?.ID}`}>Подробнее о соискателе...</Link>

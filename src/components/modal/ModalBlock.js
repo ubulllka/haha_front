@@ -13,8 +13,7 @@ const ModalSelect = ({list, respondModel, setRespondModel}) => {
                     const index = e.target.selectedIndex
                     const attr = e.target.childNodes[index]
                     const id = attr.getAttribute('data-title')
-                    setRespondModel({...respondModel, my_id: id})
-                    console.log(index, attr, id)
+                    setRespondModel({...respondModel, my_id: +id})
                 }
                 }>
             {
@@ -28,7 +27,7 @@ const ModalSelect = ({list, respondModel, setRespondModel}) => {
     )
 }
 
-export const ModalBlock = ({list, show, setShow, modalId, head, head1, not}) => {
+export const ModalBlock = ({list, show, setShow, modalId, fetchDataList, head, head1, not}) => {
 
     const token = useSelector((state) => state.user.token)
     const [respondModel, setRespondModel] = useState({
@@ -39,8 +38,9 @@ export const ModalBlock = ({list, show, setShow, modalId, head, head1, not}) => 
 
 
     const handleSubmit = async () => {
+        console.log(respondModel)
         const res = await createRespond(respondModel, token)
-        if (res?.status === "ok" ) {
+        if (res?.status === "ok") {
             alert("Ваш отклик сохранен!")
         } else {
             alert("Ваш отклик не сохранен ;-(")
@@ -102,6 +102,7 @@ export const ModalBlock = ({list, show, setShow, modalId, head, head1, not}) => 
                 </Button>
                 <Button variant="primary" disabled={!(list && list?.length)} onClick={() => {
                     handleSubmit()
+                    fetchDataList()
                     handleClose()
                 }}>
                     Отправить

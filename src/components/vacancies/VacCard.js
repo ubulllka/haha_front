@@ -4,32 +4,16 @@ import Button from "react-bootstrap/Button";
 import {getDateStr} from "../getDataStr";
 
 const GetStatus = ({status}) => {
-    switch (status) {
-        case "WAIT":
-            return (
-                <>
-                    <Card.Text className="text-secondary d-inline-block me-2">Cтатус: Ожидание</Card.Text>
-                    <Button variant={"danger"} className="p-0 ps-1 pe-1">Удалить</Button>
-                </>
-            )
-        case "ACCEPT":
-            return (
-                <>
-                    <Card.Text className="text-success d-inline-block me-2">Cтатус: Принято</Card.Text>
-                    <Button variant={"danger"} className="p-0 ps-1 pe-1">Удалить</Button>
-                </>
-            )
-        case "DECLINE":
-            return (
-                <>
-                    <Card.Text className="text-danger d-inline-block me-2">Cтатус: Отклонено</Card.Text>
-                    <Button variant={"danger"} className="btn-danger p-0 ps-1 pe-1">Удалить</Button>
-                </>
+    const map = new Map();
+    map.set("WAIT", {text: "Ожидание", st: "text-secondary"})
+    map.set("ACCEPT", {text: "Принято", st: "text-success"})
+    map.set("DECLINE", {text: "Отклонено", st: "text-danger"})
 
-            )
-        default:
-            return
-    }
+    const item = map.get(status)
+    return (
+        (item) &&
+        <Card.Text className={item.st}>Cтатус: {item.text}</Card.Text>
+    )
 }
 
 export const VacCard = ({vac, setShow, setModalId, prof}) => {

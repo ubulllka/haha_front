@@ -35,24 +35,25 @@ export const ListAllVac = () => {
         fetchData();
     }, [role, token])
 
+    const fetchDataVacList = async () => {
+        setIsLoading(true);
+        const result = (role === "APPLICANT")
+            ? await searchVacancies(page, search, token)
+            : await searchVacanciesAnon(page, search)
+        setList(result?.list)
+        setPagination(result?.pag)
+        setIsLoading(false);
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            setIsLoading(true);
-            const result = (role === "APPLICANT")
-                ? await searchVacancies(page, search, token)
-                : await searchVacanciesAnon(page, search)
-            setList(result?.list)
-            setPagination(result?.pag)
-            setIsLoading(false);
-        };
-        fetchData();
+        fetchDataVacList();
     }, [search, page, role, token]);
 
     return (
         <>
             {
                 (!isLoadListRes && role === "APPLICANT") &&
-                <ModalBlockRole list={listRes} show={show} setShow={setShow} modalId={modalId}/>
+                <ModalBlockRole list={listRes} show={show} setShow={setShow} modalId={modalId} fetchDataList={fetchDataVacList}/>
             }
 
             <h2 className="mb-2">Вакансии</h2>
@@ -80,7 +81,7 @@ export const ListAllVac = () => {
                             ?
                             list.map(vac => (
                                 <li key={vac?.ID} className="mb-3">
-                                    <VacCard vac={vac} setShow={setShow} setModalId={setModalId}/>
+                                    <VacCard vac={vac} setShow={setShow} setModalId={setModalId} />
                                 </li>
                             ))
 

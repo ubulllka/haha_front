@@ -36,25 +36,26 @@ export const ListAllRes = () => {
         fetchData();
     }, [role, token])
 
+    const fetchDataResList = async () => {
+        setIsLoading(true);
+        const result = (role === "EMPLOYER")
+            ? await searchResumes(page, search, token)
+            : await searchResumesAnon(page, search)
+        setList(result?.list)
+        setPagination(result?.pag)
+        setIsLoading(false);
+    };
     useEffect(() => {
-        const fetchData = async () => {
-            setIsLoading(true);
-            const result = (role === "EMPLOYER")
-                ? await searchResumes(page, search, token)
-                : await searchResumesAnon(page, search)
-            setList(result?.list)
-            setPagination(result?.pag)
-            setIsLoading(false);
-        };
-        fetchData();
-        console.log(list)
+        fetchDataResList();
     }, [search, page, role, token]);
+
+
 
     return (
         <>
             {
                 (!isLoadListVac && role === "EMPLOYER") &&
-                <ModalBlockRole list={listVac} show={show} setShow={setShow} modalId={modalId}/>
+                <ModalBlockRole list={listVac} show={show} setShow={setShow} modalId={modalId} fetchDataList={fetchDataResList}/>
             }
 
             <h2 className="mb-2">Резюме</h2>

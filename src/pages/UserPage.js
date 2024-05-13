@@ -9,7 +9,8 @@ import {ModalBlock} from "../components/modal/ModalBlock";
 import {UserInfo} from "../components/user/UserInfo";
 
 
-const GetModalBlock = ({role, list, show, setShow, modalId}) => {
+const GetModalBlock = ({list, show, setShow, modalId}) => {
+    const role = useSelector((state) => state.user.role)
     return (
         (role === "EMPLOYER") ?
             <ModalBlock
@@ -51,7 +52,7 @@ export const UserPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             setIsLoadListMod(true);
-            const result = await getList(token)
+            const result = (role !== "ANON") ? await getList(token) : []
             setListMod(result)
             setIsLoadListMod(false);
         };
@@ -66,7 +67,7 @@ export const UserPage = () => {
             setIsLoding(false);
         };
         fetchData();
-    }, [id])
+    }, [])
 
     useEffect(() => {
         const fetchData = async () => {
@@ -82,7 +83,7 @@ export const UserPage = () => {
         <>
             {
                 (!isLoadListMod) &&
-                <GetModalBlock role={role} list={listMod} show={show} setShow={setShow} modalId={modalId}/>
+                <GetModalBlock list={listMod} show={show} setShow={setShow} modalId={modalId}/>
             }
             {(isLoading) ?
                 <p>Loading...</p>
@@ -109,11 +110,12 @@ export const UserPage = () => {
                                     <li key={item?.ID} className="mb-3">
                                         {
                                             (user?.role === "APPLICANT") ?
-                                                <ResCard res={item} setShow={setShow} setModalId={setModalId} prof={false}/>
+                                                <ResCard res={item} setShow={setShow} setModalId={setModalId}
+                                                         prof={false}/>
                                                 :
-                                                <VacCard vac={item} setShow={setShow} setModalId={setModalId} prof={false}/>
+                                                <VacCard vac={item} setShow={setShow} setModalId={setModalId}
+                                                         prof={false}/>
                                         }
-
                                     </li>
                                 ))
 
