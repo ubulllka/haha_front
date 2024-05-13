@@ -1,4 +1,5 @@
-import {Tab, Tabs} from "react-bootstrap";
+import Tab from "react-bootstrap/Tab";
+import Tabs from "react-bootstrap/Tabs";
 import {useEffect, useState} from "react";
 import {getMyListPag} from "../../services/UserService";
 import {PagBlock} from "../Pag";
@@ -6,7 +7,7 @@ import {ResCard} from "../resumes/ResCard";
 import {VacCard} from "../vacancies/VacCard";
 import {useSelector} from "react-redux";
 import {FilterTab} from "./FilterTab";
-import {getMyRespond, getOtherRespond} from "../../services/RespondService";
+import {getMyAllResponds, getOtherAllResponds} from "../../services/RespondService";
 
 export const UserTabs = ({id}) => {
     const [isLoading, setIsLoding] = useState(true)
@@ -70,10 +71,10 @@ export const UserTabs = ({id}) => {
                 }
             </Tab>
             <Tab eventKey="myrespond" title="Мои отклики">
-                <FilterTab type={"my"} funcForGetData={getMyRespond}/>
+                <FilterTab type={"my"} funcForGetData={getMyAllResponds}/>
             </Tab>
             <Tab eventKey="otherrespond" title="Отклики мне">
-                <FilterTab type={"other"} funcForGetData={getOtherRespond}/>
+                <FilterTab type={"other"} funcForGetData={getOtherAllResponds}/>
             </Tab>
         </Tabs>
     )

@@ -2,9 +2,12 @@ import {useSelector} from "react-redux";
 import Card from "react-bootstrap/Card";
 import {getDateStr} from "./getDataStr";
 import Button from "react-bootstrap/Button";
+import {useEffect, useState} from "react";
+import {createRespond, updateRespond} from "../services/RespondService";
 
 
-const GetFooter = ({type, status}) => {
+const GetFooter = ({type, status, id}) => {
+    const token = useSelector((state) => state.user.token)
     if (type === "my") {
         switch (status) {
             case "WAIT":
@@ -35,10 +38,26 @@ const GetFooter = ({type, status}) => {
     } else {
         switch (status) {
             case "WAIT":
+                const handleSubmit = async (id, status) => {
+                    const res = await updateRespond({id: id, status:status}, token)
+                    if (res?.status === "ok" ) {
+                        alert("Ваше изменение сохранено!")
+                    } else {
+                        alert("Ваше изменение не сохранено ;-(")
+                    }
+                }
                 return (
                     <div className="d-flex gap-2">
-                        <Button variant={"success"} className="p-0 ps-1 pe-1">Принять</Button>
-                        <Button variant={"danger"} className="p-0 ps-1 pe-1">Отклонить</Button>
+                        <Button variant={"success"} className="p-0 ps-1 pe-1"
+                                onClick={() => {
+                                    handleSubmit(id,"ACCEPT")
+                                }}
+                        >Принять</Button>
+                        <Button variant={"danger"} className="p-0 ps-1 pe-1"
+                                onClick={() => {
+                                    handleSubmit(id,"DECLINE")
+                                }}
+                        >Отклонить</Button>
                     </div>
                 )
             case "ACCEPT":
@@ -70,6 +89,13 @@ export const RespondCard = ({item, type}) => {
     const addRemoveActive = (event) => {
         event.target.classList.toggle("active");
     }
+    const [itemRespond, setItemRespond] = useState(item)
+    const [flagItem, setFlagItem] = useState(false)
+
+    useEffect(() => {
+
+    })
+
     const role = useSelector((state) => state.user.role)
     return (
         <Card>
@@ -85,7 +111,7 @@ export const RespondCard = ({item, type}) => {
                            dangerouslySetInnerHTML={{__html: getLettter()}}
                            onClick={(e) => addRemoveActive(e)}/>
 
-                <GetFooter status={item?.status} type={type} />
+                <GetFooter status={item?.status} type={type} id={item?.id}/>
             </Card.Body>
             <Card.Footer className="text-muted d-flex justify-content-between gap-2">
                 <Card.Link href=

@@ -47,6 +47,7 @@ export const ListAllRes = () => {
             setIsLoading(false);
         };
         fetchData();
+        console.log(list)
     }, [search, page, role, token]);
 
     return (
