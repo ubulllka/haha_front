@@ -16,8 +16,10 @@ const GetStatus = ({status}) => {
     )
 }
 
-export const VacCard = ({vac, setShow, setModalId, prof, setShowUpdate, setVac}) => {
+export const VacCard = ({vac, setShow, setModalId, prof, setShowUpdate, setVac, setIsCreate, setItem, setShowDel}) => {
     const role = useSelector((state) => state.user.role)
+    const token = useSelector((state) => state.user.token)
+
     return (
         <Card>
             <Card.Body>
@@ -49,6 +51,7 @@ export const VacCard = ({vac, setShow, setModalId, prof, setShowUpdate, setVac})
                         <>
                             <Button variant={"warning"} className="p-0 ps-1 pe-1"
                                     onClick={() => {
+                                        setIsCreate(false)
                                         setShowUpdate(true)
                                         setVac({
                                             id: vac?.ID,
@@ -57,7 +60,15 @@ export const VacCard = ({vac, setShow, setModalId, prof, setShowUpdate, setVac})
                                         })
                                     }}
                             >Редактировать</Button>
-                            <Button variant={"danger"} className="p-0 ps-1 pe-1">Удалить</Button>
+                            <Button variant={"danger"} className="p-0 ps-1 pe-1"
+                                    onClick={async () => {
+                                        setShowDel(true)
+                                        setItem({
+                                            id: vac?.ID,
+                                            post: vac?.post,
+                                        })
+                                    }}
+                            >Удалить</Button>
                         </>
                     }
                     <p className="mb-0">{getDateStr(vac?.CreatedAt)}</p>

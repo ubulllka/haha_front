@@ -11,8 +11,6 @@ export const ProfilePage = () => {
     const token = useSelector((state) => state.user.token)
     const [isLoading, setIsLoading] = useState(true)
     const [user, setUser] = useState(null)
-    const [showVac, setShowVac] = useState(false);
-    const [list, setList] = useState(null)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -30,8 +28,6 @@ export const ProfilePage = () => {
                 <p>Loading...</p>
                 :
                 <>
-                    <ModalVac oldVac={{id: "", post: "", description: ""}}
-                              show={showVac} setShow={setShowVac} isCreate={true} />
                     <div className="row">
                         <div className="col-md-6">
                             <UserInfo user={user} prof={true}/>
@@ -39,17 +35,15 @@ export const ProfilePage = () => {
                         <div className="col-md-6">
                             <Button variant={"warning"} className="me-2">Редактировать профиль</Button>
                             {
-                                (user?.role === "APPLICANT") ?
-                                    <Button variant={"success"}>Добавить резюме</Button>
-                                    :
-                                    <Button variant={"success"}
-                                            onClick={() => setShowVac(true)}
-                                    >Добавить вакансию</Button>
+                                (user?.role === "APPLICANT") &&
+                                <Button variant={"success"}>Добавить резюме</Button>
+
+
                             }
 
                         </div>
                     </div>
-                    <UserTabs />
+                    <UserTabs/>
                 </>
             }
         </>

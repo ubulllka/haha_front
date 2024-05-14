@@ -4,16 +4,15 @@ import {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
 import {createVacancy, updateVacancy} from "../../services/VacancyService";
 
-export const ModalVac = ({show, setShow, isCreate, oldVac}) => {
+export const ModalVac = ({show, setShow, isCreate, oldVac, setOldVac, updateList}) => {
 
     const token = useSelector((state) => state.user.token)
     const handleClose = () => setShow(false);
     const [vac, setVac] = useState(oldVac)
 
-    useEffect(()=>{
+    useEffect(() => {
         setVac(oldVac)
-    },[oldVac])
-
+    }, [oldVac])
 
 
     const checkForm = () => {
@@ -50,7 +49,7 @@ export const ModalVac = ({show, setShow, isCreate, oldVac}) => {
     }
 
     const handelSubmitUpdate = async () => {
-        const res = await updateVacancy(vac?.id,{post: vac?.post, description: vac?.description}, token)
+        const res = await updateVacancy(vac?.id, {post: vac?.post, description: vac?.description}, token)
         if (res?.status === "ok") {
             alert("Ваша вакансия изменена!")
         } else {
@@ -105,15 +104,15 @@ export const ModalVac = ({show, setShow, isCreate, oldVac}) => {
                                 if (!checkForm()) return
                                 handleClose()
                                 await handelSubmitCreate()
-                                setListChanged(listChanged++)
+                                updateList()
                             }}>
                                 Сохранить
                             </Button>
-                            : <Button variant="warning" onClick={() => {
+                            : <Button variant="warning" onClick={async () => {
                                 if (!checkForm()) return
                                 handleClose()
-                                handelSubmitUpdate()
-                                setListChanged(listChanged++)
+                                await handelSubmitUpdate()
+                                setOldVac({...oldVac, post: vac?.post, description: vac?.description})
                             }}>
                                 Изменить
                             </Button>
