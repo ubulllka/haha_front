@@ -19,7 +19,6 @@ const GetStatus = ({status}) => {
 
 export const ResCard = ({res, setShow, setModalId, prof}) => {
     const role = useSelector((state) => state.user.role)
-
     return (
         <Card>
             <Card.Body>

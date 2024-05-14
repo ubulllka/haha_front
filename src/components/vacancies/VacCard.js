@@ -16,7 +16,7 @@ const GetStatus = ({status}) => {
     )
 }
 
-export const VacCard = ({vac, setShow, setModalId, prof}) => {
+export const VacCard = ({vac, setShow, setModalId, prof, setShowUpdate, setVac}) => {
     const role = useSelector((state) => state.user.role)
     return (
         <Card>
@@ -47,7 +47,16 @@ export const VacCard = ({vac, setShow, setModalId, prof}) => {
                     {
                         (prof) &&
                         <>
-                            <Button variant={"warning"} className="p-0 ps-1 pe-1">Редактировать</Button>
+                            <Button variant={"warning"} className="p-0 ps-1 pe-1"
+                                    onClick={() => {
+                                        setShowUpdate(true)
+                                        setVac({
+                                            id: vac?.ID,
+                                            post: vac?.post,
+                                            description: vac?.description,
+                                        })
+                                    }}
+                            >Редактировать</Button>
                             <Button variant={"danger"} className="p-0 ps-1 pe-1">Удалить</Button>
                         </>
                     }

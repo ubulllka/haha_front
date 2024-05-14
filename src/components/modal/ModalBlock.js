@@ -4,6 +4,7 @@ import {Link} from "react-router-dom"
 import {useEffect, useState} from "react";
 import {createRespond} from "../../services/RespondService";
 import {useSelector} from "react-redux";
+import {singUp} from "../../services/AuthService";
 
 const ModalSelect = ({list, respondModel, setRespondModel}) => {
     const selectId = list[0].id
@@ -37,8 +38,8 @@ export const ModalBlock = ({list, show, setShow, modalId, fetchDataList, head, h
     })
 
 
+
     const handleSubmit = async () => {
-        console.log(respondModel)
         const res = await createRespond(respondModel, token)
         if (res?.status === "ok") {
             alert("Ваш отклик сохранен!")
@@ -85,6 +86,7 @@ export const ModalBlock = ({list, show, setShow, modalId, fetchDataList, head, h
                                                   letter: e.target.value
                                               })}/>
                                 </label>
+
                             </>
                             :
                             <>

@@ -1,0 +1,125 @@
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
+import {useEffect, useState} from "react";
+import {useSelector} from "react-redux";
+import {createVacancy, updateVacancy} from "../../services/VacancyService";
+
+export const ModalVac = ({show, setShow, isCreate, oldVac}) => {
+
+    const token = useSelector((state) => state.user.token)
+    const handleClose = () => setShow(false);
+    const [vac, setVac] = useState(oldVac)
+
+    useEffect(()=>{
+        setVac(oldVac)
+    },[oldVac])
+
+
+
+    const checkForm = () => {
+        let formSpan = document.getElementById("formspan")
+        let input = document.getElementById(`inp-${isCreate}`)
+        let textarea = document.getElementById(`txt-${isCreate}`)
+        input.classList.remove("border-danger")
+        textarea.classList.remove("border-danger")
+        if (vac.post === "" || vac.description === "") {
+            if (vac.post === "") {
+                input.classList.add("border-danger")
+            }
+            if (vac.description === "") {
+                textarea.classList.add("border-danger")
+            }
+
+            formSpan.innerHTML = "Заполните все поля!"
+            formSpan.classList.add("mb-3", "d-block")
+            return false
+        } else {
+            formSpan.innerHTML = ""
+            formSpan.classList.remove("mb-3", "d-block")
+        }
+        return true
+    }
+
+    const handelSubmitCreate = async () => {
+        const res = await createVacancy({post: vac?.post, description: vac?.description}, token)
+        if (res?.status === "ok") {
+            alert("Ваша вакансия сохранен!")
+        } else {
+            alert("Ваша вакансия не сохранена ;-(")
+        }
+    }
+
+    const handelSubmitUpdate = async () => {
+        const res = await updateVacancy(vac?.id,{post: vac?.post, description: vac?.description}, token)
+        if (res?.status === "ok") {
+            alert("Ваша вакансия изменена!")
+        } else {
+            alert("Ваша вакансия изменена ;-(")
+        }
+    }
+
+
+    return (
+        <>
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>
+                        {
+                            (isCreate)
+                                ? <>Создание вакансии</>
+                                : <>Изменение вакансии</>
+                        }
+                    </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <form>
+                        <label className="mb-2 w-100">
+                            <p className="mb-1 form-label">Должность:</p>
+                            <input id={`inp-${isCreate}`} className="form-control" type="text" name="post"
+                                   defaultValue={vac.post}
+                                   onChange={(e) => setVac(
+                                       {...vac, post: e.target.value}
+                                   )}
+                            />
+                        </label>
+                        <label className="mb-2 w-100">
+                            <p className="mb-1 form-label">Описание:</p>
+                            <textarea id={`txt-${isCreate}`} className="form-control" rows="3" name="description"
+                                      defaultValue={vac.description}
+                                      onChange={(e) => setVac(
+                                          {...vac, description: e.target.value}
+                                      )}
+                            />
+                        </label>
+                        <span id="formspan"></span>
+                    </form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Закрыть
+                    </Button>
+
+                    {
+                        (isCreate)
+                            ? <Button variant="primary" onClick={async () => {
+                                if (!checkForm()) return
+                                handleClose()
+                                await handelSubmitCreate()
+                                setListChanged(listChanged++)
+                            }}>
+                                Сохранить
+                            </Button>
+                            : <Button variant="warning" onClick={() => {
+                                if (!checkForm()) return
+                                handleClose()
+                                handelSubmitUpdate()
+                                setListChanged(listChanged++)
+                            }}>
+                                Изменить
+                            </Button>
+                    }
+                </Modal.Footer>
+            </Modal>
+        </>
+    )
+}
