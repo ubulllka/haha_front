@@ -1,7 +1,7 @@
 import {useSelector} from "react-redux";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import {getDateStr} from "../getDataStr";
+import {dateCard} from "../dateParse";
 import {WorkProfile} from "../work/WorkProfile";
 import {useEffect, useState} from "react";
 import {getResumesWorkListAnon} from "../../services/ResumeService";
@@ -91,7 +91,7 @@ export const ResCard = ({res, setRes, setShow, setIsCreate, setShowDel, setModal
                             <Button variant={"danger"} className="p-0 ps-1 pe-1">Удалить</Button>
                         </>
                     }
-                    <p className="mb-0">{getDateStr(res?.CreatedAt)}</p>
+                    <p className="mb-0">{dateCard(res?.CreatedAt)}</p>
                 </div>
             </Card.Footer>
         </Card>

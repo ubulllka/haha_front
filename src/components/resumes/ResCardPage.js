@@ -7,7 +7,7 @@ import {UserInfo} from "../user/UserInfo";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import {ModalBlockRole} from "../modal/ModalBlockRole";
-import {getDateStr} from "../getDataStr";
+import {dateCard} from "../dateParse";
 import {WorkCard} from "../work/WorkCard";
 
 
@@ -102,16 +102,16 @@ export const ResCardPage = ({id}) => {
                     </div>
                     <div className="col-lg-4">
                         {
-                            (role === "EMPLOYER") && (status === "")
+                            (role === "EMPLOYER") && (res?.status === "")
                                 ?
                                 <Button className="mt-2 mb-3" onClick={() => {
                                     setShow(true)
                                     setModalId(res?.ID)
                                 }}>Откликнуться на резюме</Button>
                                 :
-                                (status !== "") &&
+                                (res?.status !== "") &&
                                 <div className="gap-1">
-                                    <GetStatus status={status}/>
+                                    <GetStatus status={res?.status}/>
                                 </div>
                         }
                         <UserInfo user={appl}/>

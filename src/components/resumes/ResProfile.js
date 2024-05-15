@@ -19,7 +19,6 @@ export const ResProfile = () => {
         post: "",
         description: "",
         old_work: [{
-            index: 0,
             id: "",
             post: "",
             description: "",

@@ -1,6 +1,6 @@
 import {useSelector} from "react-redux";
 import Card from "react-bootstrap/Card";
-import {getDateStr} from "./getDataStr";
+import {dateCard} from "./dateParse";
 import Button from "react-bootstrap/Button";
 import {useState} from "react";
 import {deleteMyRespond, deleteOtherRespond, updateRespond} from "../services/RespondService";
@@ -109,7 +109,7 @@ export const RespondCard = ({item, type, fetchDataRespondList}) => {
                     Подробнее...
                 </Card.Link>
                 <div className="d-flex gap-2 flex-wrap justify-content-end">
-                    <p className="mb-0">Последнее обновление: {getDateStr(itemRespond?.updated_at)}</p>
+                    <p className="mb-0">Последнее обновление: {dateCard(itemRespond?.updated_at)}</p>
                 </div>
             </Card.Footer>
         </Card>

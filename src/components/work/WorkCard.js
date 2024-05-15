@@ -1,14 +1,14 @@
 import Card from "react-bootstrap/Card";
-import {getDateStr} from "../getDataStr";
+import {dateCard} from "../dateParse";
 
 const GetData = ({start, end}) => {
     return (
         <Card.Text>
-            {getDateStr(start)}
+            {dateCard(start)}
             <span className="ms-1 me-1"> - </span>
             {
                 (new Date(end).getFullYear() !== 1)
-                    ? getDateStr(end)
+                    ? dateCard(end)
                     : <span>по настоящее время</span>
             }
         </Card.Text>

@@ -1,7 +1,7 @@
 import {useSelector} from "react-redux";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import {getDateStr} from "../getDataStr";
+import {dateCard} from "../dateParse";
 
 const GetStatus = ({status}) => {
     const map = new Map();
@@ -69,7 +69,7 @@ export const VacCard = ({vac, setVac, setShow, setIsCreate, setShowDel, setModal
                             >Удалить</Button>
                         </>
                     }
-                    <p className="mb-0">{getDateStr(vac?.CreatedAt)}</p>
+                    <p className="mb-0">{dateCard(vac?.CreatedAt)}</p>
                 </div>
             </Card.Footer>
         </Card>
