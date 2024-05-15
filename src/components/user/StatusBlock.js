@@ -29,7 +29,7 @@ export const StatusBlock = ({status, prof}) => {
     }
 
     return (
-        <p className="mb-2 d-flex align-items-center">
+        <div className="mb-2 d-flex align-items-center">
             <span className="fw-medium me-1">Статус:</span>
             <div className="d-flex align-items-start">
                 {(prof)
@@ -41,6 +41,6 @@ export const StatusBlock = ({status, prof}) => {
                     <ButtonEdit isSwap={isSwap} setIsSwap={setIsSwap} />
                 }
             </div>
-        </p>
+        </div>
     )
 }

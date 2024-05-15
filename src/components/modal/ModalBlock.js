@@ -1,10 +1,10 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import {Link} from "react-router-dom"
+import {Link, redirect} from "react-router-dom"
 import {useEffect, useState} from "react";
 import {createRespond} from "../../services/RespondService";
 import {useSelector} from "react-redux";
-import {singUp} from "../../services/AuthService";
+
 
 const ModalSelect = ({list, respondModel, setRespondModel}) => {
     const selectId = list[0].id
@@ -19,7 +19,7 @@ const ModalSelect = ({list, respondModel, setRespondModel}) => {
                 }>
             {
                 list.map(item => (
-                    <option key={item?.id} data-title={item?.id} selected={selectId == item?.id}>
+                    <option key={item?.id} data-title={item?.id} defaultValue={selectId === item?.id}>
                         {item?.post}
                     </option>
                 ))
@@ -28,7 +28,7 @@ const ModalSelect = ({list, respondModel, setRespondModel}) => {
     )
 }
 
-export const ModalBlock = ({list, show, setShow, modalId, fetchDataList, head, head1, not}) => {
+export const ModalBlock = ({list, show, setShow, modalId, fetchData, head, head1, not}) => {
 
     const token = useSelector((state) => state.user.token)
     const [respondModel, setRespondModel] = useState({
@@ -38,14 +38,9 @@ export const ModalBlock = ({list, show, setShow, modalId, fetchDataList, head, h
     })
 
 
-
     const handleSubmit = async () => {
         const res = await createRespond(respondModel, token)
-        if (res?.status === "ok") {
-            alert("Ваш отклик сохранен!")
-        } else {
-            alert("Ваш отклик не сохранен ;-(")
-        }
+        console.log("save respond: ", res?.status)
     }
     const handleClose = () => {
         setShow(false);
@@ -102,10 +97,10 @@ export const ModalBlock = ({list, show, setShow, modalId, fetchDataList, head, h
                 <Button variant="secondary" onClick={handleClose}>
                     Закрыть
                 </Button>
-                <Button variant="primary" disabled={!(list && list?.length)} onClick={() => {
-                    handleSubmit()
-                    fetchDataList()
+                <Button variant="primary" disabled={!(list && list?.length)} onClick={async () => {
+                    await handleSubmit()
                     handleClose()
+                    fetchData()
                 }}>
                     Отправить
                 </Button>

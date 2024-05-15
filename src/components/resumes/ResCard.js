@@ -3,6 +3,8 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import {getDateStr} from "../getDataStr";
 import {WorkProfile} from "../work/WorkProfile";
+import {useEffect, useState} from "react";
+import {getResumesWorkListAnon} from "../../services/ResumeService";
 
 const GetStatus = ({status}) => {
     const map = new Map();
@@ -17,8 +19,22 @@ const GetStatus = ({status}) => {
     )
 }
 
-export const ResCard = ({res, setShow, setModalId, prof}) => {
+export const ResCard = ({res, setRes, setShow, setIsCreate, setShowDel, setModalId, setItem, prof}) => {
     const role = useSelector((state) => state.user.role)
+    const [isLoading, setIsLoading] = useState(true)
+    const [listWork, setListWork] = useState(null)
+
+    const fetchData = async () => {
+        setIsLoading(true);
+        const resListWork = await getResumesWorkListAnon(res?.ID)
+        setListWork(resListWork)
+        setIsLoading(false);
+    };
+    useEffect(() => {
+        if (prof) {
+            fetchData();
+        }
+    }, []);
     return (
         <Card>
             <Card.Body>
@@ -28,7 +44,8 @@ export const ResCard = ({res, setShow, setModalId, prof}) => {
                 </Card.Text>
                 {
                     (prof) &&
-                    <WorkProfile id={res?.ID} />
+                    (!isLoading) ? <WorkProfile list={listWork}/> : ""
+
                 }
             </Card.Body>
             <Card.Footer className="text-muted d-flex justify-content-between gap-2">
@@ -52,7 +69,25 @@ export const ResCard = ({res, setShow, setModalId, prof}) => {
                     {
                         (prof) &&
                         <>
-                            <Button variant={"warning"} className="p-0 ps-1 pe-1">Редактировать</Button>
+                            <Button variant={"warning"} className="p-0 ps-1 pe-1"
+                                    onClick={() => {
+                                        setIsCreate(false)
+                                        setShow(true)
+                                        setRes({
+                                            id: res?.ID,
+                                            post: res?.post,
+                                            description: res?.description,
+                                            old_work: listWork.map((work, i) => ({
+                                                index: i,
+                                                id: work?.ID,
+                                                post: work?.post,
+                                                description: work?.description,
+                                                start_time: work?.start_time,
+                                                end_time: work?.end_time
+                                            }))
+                                        })
+                                    }}
+                            >Редактировать</Button>
                             <Button variant={"danger"} className="p-0 ps-1 pe-1">Удалить</Button>
                         </>
                     }

@@ -33,12 +33,8 @@ export const Header = () => {
                         style={{maxHeight: '100px'}}
                         navbarScroll
                     >
-                        <Nav.Link>
-                            <Link className="header__link" to="/vac">Вакансии</Link>
-                        </Nav.Link>
-                        <Nav.Link>
-                            <Link className="header__link" to="/res">Резюме</Link>
-                        </Nav.Link>
+                        <Link className="nav-link" to="/vac">Вакансии</Link>
+                        <Link className="nav-link" to="/res">Резюме</Link>
                     </Nav>
 
                     <Form className="d-flex gap-2">

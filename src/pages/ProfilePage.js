@@ -34,13 +34,6 @@ export const ProfilePage = () => {
                         </div>
                         <div className="col-md-6">
                             <Button variant={"warning"} className="me-2">Редактировать профиль</Button>
-                            {
-                                (user?.role === "APPLICANT") &&
-                                <Button variant={"success"}>Добавить резюме</Button>
-
-
-                            }
-
                         </div>
                     </div>
                     <UserTabs/>

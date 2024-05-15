@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
 import {createVacancy, updateVacancy} from "../../services/VacancyService";
 
-export const ModalVac = ({show, setShow, isCreate, oldVac, setOldVac, updateList}) => {
+export const ModalVac = ({show, setShow, isCreate, oldVac, setOldVac, updateList, isAlllist}) => {
 
     const token = useSelector((state) => state.user.token)
     const handleClose = () => setShow(false);
@@ -60,12 +60,19 @@ export const ModalVac = ({show, setShow, isCreate, oldVac, setOldVac, updateList
 
     return (
         <>
-            <Modal show={show} onHide={handleClose}>
+            <Modal show={show} onHide={() => {
+                setVac({
+                    id: "",
+                    post: "",
+                    description: ""
+                })
+                handleClose()
+            }}>
                 <Modal.Header closeButton>
                     <Modal.Title>
                         {
                             (isCreate)
-                                ? <>Создание вакансии</>
+                                ? <>Создание вакансии </>
                                 : <>Изменение вакансии</>
                         }
                     </Modal.Title>
@@ -75,7 +82,7 @@ export const ModalVac = ({show, setShow, isCreate, oldVac, setOldVac, updateList
                         <label className="mb-2 w-100">
                             <p className="mb-1 form-label">Должность:</p>
                             <input id={`inp-${isCreate}`} className="form-control" type="text" name="post"
-                                   defaultValue={vac.post}
+                                   defaultValue={vac?.post}
                                    onChange={(e) => setVac(
                                        {...vac, post: e.target.value}
                                    )}
@@ -94,7 +101,14 @@ export const ModalVac = ({show, setShow, isCreate, oldVac, setOldVac, updateList
                     </form>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
+                    <Button variant="secondary" onClick={() => {
+                        setVac({
+                            id: "",
+                            post: "",
+                            description: ""
+                        })
+                        handleClose()
+                    }}>
                         Закрыть
                     </Button>
 
@@ -105,6 +119,11 @@ export const ModalVac = ({show, setShow, isCreate, oldVac, setOldVac, updateList
                                 handleClose()
                                 await handelSubmitCreate()
                                 updateList()
+                                setVac({
+                                    id: "",
+                                    post: "",
+                                    description: ""
+                                })
                             }}>
                                 Сохранить
                             </Button>
@@ -113,6 +132,11 @@ export const ModalVac = ({show, setShow, isCreate, oldVac, setOldVac, updateList
                                 handleClose()
                                 await handelSubmitUpdate()
                                 setOldVac({...oldVac, post: vac?.post, description: vac?.description})
+                                setVac({
+                                    id: "",
+                                    post: "",
+                                    description: ""
+                                })
                             }}>
                                 Изменить
                             </Button>

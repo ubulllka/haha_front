@@ -7,7 +7,7 @@ import {ModalVac} from "../modal/ModalVac";
 import Button from "react-bootstrap/Button";
 import {ModalDelete} from "../modal/ModalDelete";
 
-export const VacProfile = ({listChanged}) => {
+export const VacProfile = () => {
     const [isLoading, setIsLoding] = useState(true)
     const [list, setList] = useState(null)
     const [pagination, setPagination] = useState(null)
@@ -36,7 +36,6 @@ export const VacProfile = ({listChanged}) => {
     };
 
     useEffect(() => {
-
         fetchData();
     }, [page, token])
     return (
@@ -52,6 +51,11 @@ export const VacProfile = ({listChanged}) => {
                     <Button className="mb-2" variant={"success"}
                             onClick={() => {
                                 setIsCreate(true)
+                                setVac({
+                                    id: "",
+                                    post: "",
+                                    description: ""
+                                })
                                 setShowVac(true)
                             }}
                     >Добавить вакансию</Button>
@@ -61,8 +65,9 @@ export const VacProfile = ({listChanged}) => {
                                 ?
                                 list.map(item => (
                                     <li key={item?.ID} className="mb-3">
-                                        <VacCard vac={item} prof={true} setShowUpdate={setShowVac} setVac={setVac}
-                                                 setIsCreate={setIsCreate} setItem={setItem} setShowDel={setShowDel}/>
+                                        <VacCard vac={item} setVac={setVac} setShow={setShowVac} setShowDel={setShowDel}
+                                                 setItem={setItem} prof={true} setIsCreate={setIsCreate}
+                                        />
                                     </li>
                                 ))
 

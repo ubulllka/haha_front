@@ -60,24 +60,25 @@ export const ResCardPage = ({id}) => {
     const [isLoadListRes, setIsLoadListRes] = useState(true)
     const [listRes, setListRes] = useState(null)
 
+    const fetchDataRes = async () => {
+        setIsLoadListRes(true);
+        if (role === "EMPLOYER") { //для modalBlock
+            const result = await getList(token)
+            setListRes(result)
+        }
+        setIsLoadListRes(false);
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            setIsLoadListRes(true);
-            if (role === "EMPLOYER") { //для modalBlock
-                const result = await getList(token)
-                setListRes(result)
-            }
-            setIsLoadListRes(false);
-        };
-        fetchData();
+        fetchDataRes();
     }, [role, token])
 
     return (
         <>
             {
                 (!isLoadListRes && role === "EMPLOYER") &&
-                <ModalBlockRole list={listRes} show={show} setShow={setShow} modalId={modalId}/>
+                <ModalBlockRole list={listRes} show={show} setShow={setShow} modalId={modalId}
+                                fetchData={fetchDataRes}/>
             }
             <h2>Резюме</h2>
             {isLoading ? (
@@ -101,16 +102,16 @@ export const ResCardPage = ({id}) => {
                     </div>
                     <div className="col-lg-4">
                         {
-                            (role === "EMPLOYER") && (res?.status === "")
+                            (role === "EMPLOYER") && (status === "")
                                 ?
                                 <Button className="mt-2 mb-3" onClick={() => {
                                     setShow(true)
                                     setModalId(res?.ID)
                                 }}>Откликнуться на резюме</Button>
                                 :
-                                (res?.status !== "") &&
+                                (status !== "") &&
                                 <div className="gap-1">
-                                    <GetStatus status={res?.status}/>
+                                    <GetStatus status={status}/>
                                 </div>
                         }
                         <UserInfo user={appl}/>

@@ -6,7 +6,7 @@ import {getMyAllResponds, getOtherAllResponds} from "../../services/RespondServi
 import {VacProfile} from "../vacancies/VacProfile";
 import {ResProfile} from "../resumes/ResProfile";
 
-export const UserTabs = ({listChanged}) => {
+export const UserTabs = () => {
     const role = useSelector((state) => state.user.role)
     const getTitle = () => {
         return (role === "APPLICANT") ?
@@ -20,7 +20,7 @@ export const UserTabs = ({listChanged}) => {
             <Tab eventKey="mylist" title={getTitle()}>
                 {
                     (role === "EMPLOYER")
-                        ? <VacProfile listChanged={listChanged}/>
+                        ? <VacProfile/>
                         : <ResProfile/>
                 }
             </Tab>

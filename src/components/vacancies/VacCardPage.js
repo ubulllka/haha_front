@@ -28,24 +28,25 @@ export const VacCardPage = ({id}) => {
     const [empl, setEmpl] = useState(null);
     const [myprof, setMyprof] = useState(false)
 
+    const fetchDataVac = async () => {
+        setIsLoading(true);
+        const vacRes = (role === "APPLICANT")
+            ? await getVacancy(id, token)
+            : await getVacancyAnon(id)
+
+        setVac(vacRes)
+        const result = await getUser(vacRes?.employer_id);
+        setEmpl(result);
+        if (token !== "") {
+            const myprofRes = await isUser(result?.ID, token)
+            setMyprof(myprofRes?.status === "true")
+        }
+        setIsLoading(false);
+
+    };
     useEffect(() => {
-        const fetchData = async () => {
-            setIsLoading(true);
-            const vacRes = (role === "APPLICANT")
-                ? await getVacancy(id, token)
-                : await getVacancyAnon(id)
 
-            setVac(vacRes)
-            const result = await getUser(vacRes?.employer_id);
-            setEmpl(result);
-            if (token !== "") {
-                const myprofRes = await isUser(result?.ID, token)
-                setMyprof(myprofRes?.status === "true")
-            }
-            setIsLoading(false);
-
-        };
-        fetchData();
+        fetchDataVac();
 
     }, [id, token, role]);
 
@@ -53,7 +54,6 @@ export const VacCardPage = ({id}) => {
     const [modalId, setModalId] = useState(0)
     const [isLoadListRes, setIsLoadListRes] = useState(true)
     const [listRes, setListRes] = useState(null)
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -67,15 +67,13 @@ export const VacCardPage = ({id}) => {
         fetchData();
     }, [role, token])
 
-    useEffect(() => {
-        console.log(vac)
-    }, [vac])
 
     return (
         <>
             {
                 (!isLoadListRes && role === "APPLICANT") &&
-                <ModalBlockRole list={listRes} show={show} setShow={setShow} modalId={modalId}/>
+                <ModalBlockRole list={listRes} show={show} setShow={setShow} modalId={modalId}
+                                fetchData={fetchDataVac}/>
             }
             <h2>Вакансия</h2>
             {isLoading ? (

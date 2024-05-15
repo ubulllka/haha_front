@@ -15,33 +15,28 @@ const GetFooter = ({type, itemRespond, setItemRespond, fetchDataRespondList}) =>
             : await deleteOtherRespond(id, token)
         if (res?.status === "ok") {
             fetchDataRespondList()
-            alert("Отклик удален!")
-        } else {
-            alert("Отклик не удален ;-(")
         }
-        console.log(res)
+        console.log("deleted: ", res?.status)
     }
 
-    if ((type === "other") && (itemRespond?.status == "WAIT")) {
+    if ((type === "other") && (itemRespond?.status === "WAIT")) {
         const handleSubmitUpdate = async (id, status) => {
             const res = await updateRespond({id: id, status: status}, token)
             if (res?.status === "ok") {
                 setItemRespond({...itemRespond, status: status})
-                alert("Ваше изменение сохранено!")
-            } else {
-                alert("Ваше изменение не сохранено ;-(")
             }
+            console.log("update: ", res?.status)
         }
         return (
             <div className="d-flex gap-2">
                 <Button variant={"success"} className="p-0 ps-1 pe-1"
-                        onClick={() => {
-                            handleSubmitUpdate(itemRespond?.id, "ACCEPT")
+                        onClick={async () => {
+                            await handleSubmitUpdate(itemRespond?.id, "ACCEPT")
                         }}
                 >Принять</Button>
                 <Button variant={"danger"} className="p-0 ps-1 pe-1"
-                        onClick={() => {
-                            handleSubmitUpdate(itemRespond?.id, "DECLINE")
+                        onClick={async () => {
+                            await handleSubmitUpdate(itemRespond?.id, "DECLINE")
                         }}
                 >Отклонить</Button>
             </div>

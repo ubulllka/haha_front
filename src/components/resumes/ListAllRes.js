@@ -55,7 +55,8 @@ export const ListAllRes = () => {
         <>
             {
                 (!isLoadListVac && role === "EMPLOYER") &&
-                <ModalBlockRole list={listVac} show={show} setShow={setShow} modalId={modalId} fetchDataList={fetchDataResList}/>
+                <ModalBlockRole list={listVac} show={show} setShow={setShow} modalId={modalId}
+                                fetchDataList={fetchDataResList}/>
             }
 
             <h2 className="mb-2">Резюме</h2>

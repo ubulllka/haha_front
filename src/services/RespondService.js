@@ -83,7 +83,6 @@ export async function getOtherRespond(id, token) {
 
 export async function deleteMyRespond(id, token) {
     const url = baseUrl + id + "/my"
-    console.log(url)
     const result = await fetch(`${url}`, {
         method: 'DELETE',
         headers: {
