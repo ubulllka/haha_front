@@ -1,108 +1,67 @@
-import {checkAuth} from "./helper";
+import $api from '../http';
 
-const baseUrl = "http://localhost:8080/api/respond/"
+export default class RespondService {
+    static async getMyAllResponds(token, page, filter) {
+        return $api.send(`/respond/my?page=${page}&filter=${filter.join(",")}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + token,
+            },
+        })
+    }
 
-export async function getMyAllResponds(token, page, filter) {
-    const url = baseUrl + `my?page=${page}&filter=${filter.join(",")}`
-    const result = await fetch(`${url}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + token,
-        },
-    })
-    if (result.status !== 200) return null
-    return checkAuth(result) ? result.json() : null
-}
+    static async getOtherAllResponds(token, page, filter) {
+        return $api.send(`/respond/other?page=${page}&filter=${filter.join(",")}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + token,
+            },
+        })
+    }
 
-export async function getOtherAllResponds(token, page, filter) {
-    const url = baseUrl + `other?page=${page}&filter=${filter.join(",")}`
-    const result = await fetch(`${url}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + token,
-        },
-    })
-    if (result.status !== 200) return null
-    return checkAuth(result) ? result.json() : null
-}
+    static async createRespond(respond, token) {
+        return $api.send(`/respond/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + token,
+            },
+            body: JSON.stringify(respond),
+        })
+    }
 
-export async function createRespond(respond, token) {
-    const result = await fetch(`${baseUrl}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + token,
-        },
-        body: JSON.stringify(respond),
-    })
-    if (result.status !== 200) return null
-    return checkAuth(result) ? result.json() : null
-}
+    static async updateRespond(respond, token) {
+        return $api.send(`/respond/${respond.id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + token,
+            },
+            body: JSON.stringify({
+                status: respond.status
+            }),
+        })
+    }
 
-export async function updateRespond(respond, token) {
-    const url = baseUrl + respond.id
-    const result = await fetch(`${url}`, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + token,
-        },
-        body: JSON.stringify({
-            status: respond.status
-        }),
-    })
-    if (result.status !== 200) return null
-    return checkAuth(result) ? result.json() : null
-}
+    static async deleteMyRespond(id, token) {
+        return $api.send(`/respond/${id}/my`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + token,
+            },
+        })
+    }
 
-export async function getMyRespond(id, token) {
-    const url = baseUrl + id + "/my"
-    const result = await fetch(`${url}`, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + token,
-        },
-    })
-    if (result.status !== 200) return null
-    return checkAuth(result) ? result.json() : null
-}
-
-export async function getOtherRespond(id, token) {
-    const url = baseUrl + id + "/other"
-    const result = await fetch(`${url}`, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + token,
-        },
-    })
-    if (result.status !== 200) return null
-    return checkAuth(result) ? result.json() : null
-}
-
-export async function deleteMyRespond(id, token) {
-    const url = baseUrl + id + "/my"
-    const result = await fetch(`${url}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + token,
-        },
-    })
-    if (result.status !== 200) return null
-    return checkAuth(result) ? result.json() : null
-}
-
-export async function deleteOtherRespond(id, token) {
-    const url = baseUrl + id + "/other"
-    const result = await fetch(`${url}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + token,
-        },
-    })
-    if (result.status !== 200) return null
-    return checkAuth(result) ? result.json() : null
+    static async deleteOtherRespond(id, token) {
+        return $api.send(`/respond/${id}/other`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + token,
+            },
+        })
+    }
 }

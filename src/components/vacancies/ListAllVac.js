@@ -4,8 +4,8 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import {useEffect, useState} from "react";
 import {PagBlock} from "../Pag";
-import {getList} from "../../services/UserService";
-import {searchVacancies, searchVacanciesAnon} from "../../services/VacancyService";
+import UserService from "../../services/UserService";
+import VacancyService from "../../services/VacancyService";
 import {VacCard} from "./VacCard";
 import {ModalBlockRole} from "../modal/ModalBlockRole";
 
@@ -27,7 +27,7 @@ export const ListAllVac = () => {
         const fetchData = async () => {
             setIsLoadListRes(true);
             if (role === "APPLICANT") {
-                const result = await getList(token)
+                const result = await UserService.getList(token)
                 setListRes(result)
             }
             setIsLoadListRes(false);
@@ -38,8 +38,8 @@ export const ListAllVac = () => {
     const fetchDataVacList = async () => {
         setIsLoading(true);
         const result = (role === "APPLICANT")
-            ? await searchVacancies(page, search, token)
-            : await searchVacanciesAnon(page, search)
+            ? await VacancyService.searchVacancies(page, search, token)
+            : await VacancyService.searchVacanciesAnon(page, search)
         setList(result?.list)
         setPagination(result?.pag)
         setIsLoading(false);
@@ -54,7 +54,7 @@ export const ListAllVac = () => {
             {
                 (!isLoadListRes && role === "APPLICANT") &&
                 <ModalBlockRole list={listRes} show={show} setShow={setShow} modalId={modalId}
-                                fetchDataList={fetchDataVacList}/>
+                                fetchData={fetchDataVacList}/>
             }
 
             <h2 className="mb-2">Вакансии</h2>

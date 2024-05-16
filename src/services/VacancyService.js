@@ -1,82 +1,66 @@
-import {checkAuth} from "./helper";
+import $api from "../http";
 
-const baseUrl = "http://localhost:8080/api/vac/"
-const baseUrlAnon = "http://localhost:8080/api/vaca/"
 
-// export async function getAllVacancies() {
-//     const result = await fetch(`${baseUrl}`)
-//     return result.json()
-// }
+export default class VacancyService {
+    static async searchVacanciesAnon(page, q) {
+        return $api.send(`/vaca/search?page=${page}&q=${q}`, {})
+    }
 
-export async function searchVacanciesAnon(page, q) {
-    const url = baseUrlAnon + `search?page=${page}&q=${q}`
-    const result = await fetch(`${url}`)
-    return result.json()
+    static async getVacancyAnon(id) {
+        return $api.send(`/vaca/${id}`, {})
+    }
+
+    static async searchVacancies(page, q, token) {
+        return $api.send(`/vac/search?page=${page}&q=${q}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + token,
+            },
+        })
+    }
+
+    static async getVacancy(id, token) {
+        return $api.send(`/vac/${id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + token,
+            },
+        })
+    }
+
+    static async createVacancy(vacancy, token) {
+        return $api.send(`/vac/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + token,
+            },
+            body: JSON.stringify(vacancy),
+        })
+    }
+
+    static async updateVacancy(id, vacancy, token) {
+        return $api.send(`/vac/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + token,
+            },
+            body: JSON.stringify(vacancy),
+        })
+    }
+
+    static async deleteVacancy(id, token) {
+        return $api.send(`/vac/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + token,
+            },
+        })
+    }
+
 }
 
-export async function getVacancyAnon(id) {
-    const url = baseUrlAnon + id
-    const result = await fetch(`${url}`)
-    return result.json()
-}
-export async function searchVacancies(page, q, token) {
-    const url = baseUrl + `search?page=${page}&q=${q}`
-    const result = await fetch(`${url}`,{headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + token,
-        },})
-    return result.json()
-}
-
-export async function getVacancy(id, token) {
-    const url = baseUrl + id
-    const result = await fetch(`${url}`,{
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + token,
-        },
-    })
-    return result.json()
-}
-
-export async function createVacancy(vacancy, token) { //post, description
-    const result = await fetch(`${baseUrl}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + token,
-        },
-        body: JSON.stringify(vacancy),
-    })
-    if (result.status !== 200) return null
-    return checkAuth(result) ? result.json() : null
-}
-
-export async function updateVacancy(id, vacancy, token) { //post, description
-    const url = baseUrl + id
-    const result = await fetch(`${url}`, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + token,
-        },
-        body: JSON.stringify(vacancy),
-    })
-    if (result.status !== 200) return null
-    return checkAuth(result) ? result.json() : null
-}
-
-export async function deleteVacancy(id, token) {
-    const url = baseUrl + id
-    const result = await fetch(`${url}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + token,
-        },
-    })
-    if (result.status !== 200) return null
-    return checkAuth(result) ? result.json() : null
-}
 
 

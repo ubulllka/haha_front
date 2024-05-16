@@ -1,16 +1,10 @@
 export const HomePage = () => {
     return (
         <>
-            <p>hahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahaha</p>
-            <p>hahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahaha</p>
-            <p>hahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahaha</p>
-            <p>hahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahaha</p>
-            <p>hahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahaha</p>
-            <p>hahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahaha</p>
-            <p>hahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahaha</p>
-            <p>hahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahaha</p>
-            <p>hahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahaha</p>
-            <p>hahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahahaha</p>
+            <div className="text-center mt-5">
+                <h2>haha.ru</h2>
+                <p>Найди работу, от которой будешь получать только радость!</p>
+            </div>
         </>
     )
 }

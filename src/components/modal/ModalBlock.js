@@ -1,8 +1,8 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import {Link, redirect} from "react-router-dom"
+import {Link} from "react-router-dom"
 import {useEffect, useState} from "react";
-import {createRespond} from "../../services/RespondService";
+import RespondService from "../../services/RespondService";
 import {useSelector} from "react-redux";
 
 
@@ -15,8 +15,7 @@ const ModalSelect = ({list, respondModel, setRespondModel}) => {
                     const attr = e.target.childNodes[index]
                     const id = attr.getAttribute('data-title')
                     setRespondModel({...respondModel, my_id: +id})
-                }
-                }>
+                }}>
             {
                 list.map(item => (
                     <option key={item?.id} data-title={item?.id} defaultValue={selectId === item?.id}>
@@ -33,20 +32,20 @@ export const ModalBlock = ({list, show, setShow, modalId, fetchData, head, head1
     const token = useSelector((state) => state.user.token)
     const [respondModel, setRespondModel] = useState({
         modal_id: +modalId,
-        my_id: list && list[0].id,
+        my_id: list && list[0]?.id,
         letter: ""
     })
 
 
     const handleSubmit = async () => {
-        const res = await createRespond(respondModel, token)
+        const res = await RespondService.createRespond(respondModel, token)
         console.log("save respond: ", res?.status)
     }
     const handleClose = () => {
         setShow(false);
         setRespondModel({
             modal_id: +modalId,
-            my_id: list && list[0].id,
+            my_id: list && list[0]?.id,
             letter: ""
         })
     }
@@ -86,9 +85,11 @@ export const ModalBlock = ({list, show, setShow, modalId, fetchData, head, head1
                             :
                             <>
                                 <p className="m-auto">{not}</p>
-                                <Button className="mt-1 d-block m-auto" variant="outline-success">
-                                    <Link to="/prof" className="text-decoration-none">Перейти в профиль</Link>
-                                </Button>
+
+                                <Link to="/prof" className="mt-1 d-block m-auto btn btn-outline-success">
+                                    Перейти в профиль
+                                </Link>
+
                             </>
                     }
                 </form>

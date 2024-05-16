@@ -1,15 +1,42 @@
-import {StatusBlock} from "./StatusBlock";
-import {DescribeBlock} from "./DescribeBlock";
+const getStatus = (user) => {
+    switch (user?.status) {
+        case "ACTIVE":
+            return "Активно ищу работу"
+        case "PASSIVE":
+            return "Рассматриваю предложения"
+        default:
+            return "Не ищу работу"
+    }
+    return (
+        <span>
+            {
+                (user?.status === "ACTIVE")
+                    ? "Активно ищу работу"
+                    : (user?.status === "PASSIVE")
+                        ? "Рассматриваю предложения"
+                        : "Не ищу работу"
+            }
+
+
+        </span>
+    )
+}
 
 export const UserInfo = ({user, prof}) => {
-    return(
+    return (
         <>
             <h4 className="mb-2">{user?.name}</h4>
             {
                 (user?.role === "APPLICANT") &&
-                <StatusBlock status={user?.status} prof={prof}/>
+                <p className="mb-2">
+                    <span className="fw-medium me-1">Статус:</span>
+                    {getStatus(user)}
+                </p>
+
             }
-            <DescribeBlock description={user?.description} prof={prof}/>
+            <p className="mb-2 mt-2">
+                {user?.description}
+            </p>
             <p className="mb-1">
                 <span className="fw-medium me-1">Почта:</span>
                 {user?.email}

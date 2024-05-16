@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
-import {getList, getUser, isUser} from "../../services/UserService";
+import UserService from "../../services/UserService";
 import {Link} from "react-router-dom";
-import {getVacancy, getVacancyAnon} from "../../services/VacancyService";
+import VacancyService from "../../services/VacancyService";
 import {useSelector} from "react-redux";
 import Button from "react-bootstrap/Button";
 import {UserInfo} from "../user/UserInfo";
@@ -31,14 +31,14 @@ export const VacCardPage = ({id}) => {
     const fetchDataVac = async () => {
         setIsLoading(true);
         const vacRes = (role === "APPLICANT")
-            ? await getVacancy(id, token)
-            : await getVacancyAnon(id)
+            ? await VacancyService.getVacancy(id, token)
+            : await VacancyService.getVacancyAnon(id)
 
         setVac(vacRes)
-        const result = await getUser(vacRes?.employer_id);
+        const result = await UserService.getUser(vacRes?.employer_id);
         setEmpl(result);
         if (token !== "") {
-            const myprofRes = await isUser(result?.ID, token)
+            const myprofRes = await UserService.isUser(result?.ID, token)
             setMyprof(myprofRes?.status === "true")
         }
         setIsLoading(false);
@@ -59,7 +59,7 @@ export const VacCardPage = ({id}) => {
         const fetchData = async () => {
             setIsLoadListRes(true);
             if (role === "APPLICANT") {
-                const result = await getList(token)
+                const result = await UserService.getList(token)
                 setListRes(result)
             }
             setIsLoadListRes(false);

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
-import {getMyListPag} from "../../services/UserService";
+import UserService from "../../services/UserService";
 import {PagBlock} from "../Pag";
 import {VacCard} from "./VacCard";
 import {ModalVac} from "../modal/ModalVac";
@@ -27,17 +27,17 @@ export const VacProfile = () => {
         post: "",
     })
 
-    const fetchData = async () => {
+    const fetchDataVac = async () => {
         setIsLoding(true);
-        const result = await getMyListPag(token, page)
+        const result = await UserService.getMyListPag(token, page)
         setList(result?.list)
         setPagination(result?.pag)
         setIsLoding(false);
     };
 
     useEffect(() => {
-        fetchData();
-    }, [page, token])
+        fetchDataVac();
+    }, [])
     return (
         <>
             {(isLoading) ?
@@ -45,9 +45,9 @@ export const VacProfile = () => {
                 :
                 <>
                     <ModalVac oldVac={vac} show={showVac} setShow={setShowVac} isCreate={isCreate}
-                              setOldVac={setVac} updateList={fetchData}/>
+                              setOldVac={setVac} updateList={fetchDataVac}/>
                     <ModalDelete show={showDel} setShow={setShowDel} isVac={true} oldItem={item}
-                                 updateList={fetchData}/>
+                                 updateList={fetchDataVac}/>
                     <Button className="mb-2" variant={"success"}
                             onClick={() => {
                                 setIsCreate(true)

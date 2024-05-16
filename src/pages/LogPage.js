@@ -1,6 +1,6 @@
 import {LogForm} from "../components/auth/LogForm"
 import {useActionData, useNavigation, redirect} from "react-router-dom"
-import {singIn} from "../services/AuthService"
+import AuthService, {singIn} from "../services/AuthService"
 import {setUser} from "../features/user/userSlice";
 
 
@@ -40,8 +40,8 @@ export const logAction = async (request, dispatch) => {
     } else {
         formSpan.innerHTML = ""
     }
-    const user = await singIn(newUser)
-    console.log(user)
+
+    const user = await AuthService.singIn(newUser)
     if (user) {
         dispatch(setUser(user))
         return redirect('/')

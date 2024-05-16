@@ -5,8 +5,10 @@ import {useSelector} from "react-redux";
 import Form from 'react-bootstrap/Form';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import ResumeService from "../../services/ResumeService";
+import {compareDate, compareForm} from "../dateParse";
 
-export const ModalRes = ({show, setShow, isCreate, setShowUpdate, oldRes, setOldRes, updateList}) => {
+export const ModalRes = ({show, setShow, isCreate, oldRes, setOldRes, updateList, page}) => {
 
     const token = useSelector((state) => state.user.token)
     const handleClose = () => setShow(false);
@@ -15,38 +17,30 @@ export const ModalRes = ({show, setShow, isCreate, setShowUpdate, oldRes, setOld
         post: oldRes?.post,
         description: oldRes?.description
     })
-    const [listWork, setListWork] = useState(oldRes?.old_work.map((work, i) => ({
+    const [listWork, setListWork] = useState(oldRes?.old_works.map((work, i) => ({
         id: i,
-        work_id: work?.id,
+        work_id: work?.work_id,
+        post: work?.post,
+        description: work?.description,
         start: work?.start_time,
         end: work?.end_time,
         checked: (new Date(work.end_time).getFullYear() === 1)
     })))
 
-    const compareDate = (a, b) => {
-        if (new Date(a.start_time) < new Date(b.start_time)) {
-            return 1
-        }
-        if (new Date(a.start_time) > new Date(b.start_time)) {
-            return -1
-        }
-        return 0
-    }
 
     listWork.sort((a, b) => compareDate(a, b))
 
     const [idCheck, setIdCheck] = useState(listWork.length)
 
     useEffect(() => {
-
         setRes({
             id: oldRes?.id,
             post: oldRes?.post,
             description: oldRes?.description
         })
-        setListWork(oldRes?.old_work.map((work, i) => ({
+        setListWork(oldRes?.old_works.map((work, i) => ({
             id: i,
-            work_id: work?.id,
+            work_id: work?.work_id,
             post: work?.post,
             description: work?.description,
             start_time: work?.start_time,
@@ -54,8 +48,7 @@ export const ModalRes = ({show, setShow, isCreate, setShowUpdate, oldRes, setOld
             checked: (new Date(work.end_time).getFullYear() === 1)
         })))
         listWork.sort((a, b) => compareDate(a, b))
-
-        setIdCheck(listWork.length)
+        setIdCheck(oldRes?.old_works.length)
     }, [oldRes])
 
 
@@ -67,27 +60,70 @@ export const ModalRes = ({show, setShow, isCreate, setShowUpdate, oldRes, setOld
         })
         setListWork([{
             id: 1,
-            work_id: "",
+            work_id: 0,
             post: "",
             description: "",
-            start_time: "",
-            end_time: "",
+            start_time: null,
+            end_time: null,
             checked: false
         }])
         setIdCheck(1)
     }
-    const checkForm = () => {
+
+    const checkForm = (listWork) => {
+
         let formSpan = document.getElementById("formspan")
-        let input = document.getElementById(`inp-${isCreate}`)
-        let textarea = document.getElementById(`txt-${isCreate}`)
-        input.classList.remove("border-danger")
-        textarea.classList.remove("border-danger")
-        if (res.post === "" || res.description === "") {
+        formSpan.innerHTML = ""
+        formSpan.classList.remove("mb-3", "d-block")
+        let posts = document.getElementsByName(`post`)
+        let descrs = document.querySelectorAll("textarea.modal-textarea")
+        let starts = document.getElementsByName(`date-start`)
+        let ends = document.getElementsByName(`date-end`)
+
+        for (let el of posts) {
+            el.classList.remove("border-danger")
+        }
+        for (let el of descrs) {
+            el.classList.remove("border-danger")
+        }
+        for (let el of starts) {
+            el.classList.remove("border-danger")
+        }
+        for (let el of ends) {
+            el.classList.remove("border-danger")
+        }
+
+        let flag = false
+        for (let el of listWork) {
+            if (el.post === "" || el.description === "" ||
+                (el.start_time === null) || (!el.checked) && el.end_time === null) {
+                flag = true
+                break
+            }
+        }
+
+
+        if (res.post === "" || res.description === "" || flag) {
             if (res.post === "") {
-                input.classList.add("border-danger")
+                posts[0].classList.add("border-danger")
             }
             if (res.description === "") {
-                textarea.classList.add("border-danger")
+                descrs[0].classList.add("border-danger")
+            }
+
+            for (let i = 0; i < listWork.length; i++) {
+                if (listWork[i].post === "") {
+                    posts[i + 1].classList.add("border-danger")
+                }
+                if (listWork[i].description === "") {
+                    descrs[i + 1].classList.add("border-danger")
+                }
+                if (listWork[i].start_time === null) {
+                    starts[i].classList.add("border-danger")
+                }
+                if ((!listWork[i].checked) && listWork[i].end_time === null) {
+                    ends[i].classList.add("border-danger")
+                }
             }
             formSpan.innerHTML = "Заполните все поля!"
             formSpan.classList.add("mb-3", "d-block")
@@ -96,41 +132,105 @@ export const ModalRes = ({show, setShow, isCreate, setShowUpdate, oldRes, setOld
             formSpan.innerHTML = ""
             formSpan.classList.remove("mb-3", "d-block")
         }
+
+        flag = false
+        for (let el of listWork) {
+            if (!el.checked && (compareForm(el, el) === -1)) {
+                flag = true
+                break
+            }
+        }
+        if (flag) {
+            for (let i = 0; i < listWork.length; i++) {
+                if (!listWork[i].checked && compareForm(listWork[i], listWork[i]) === -1) {
+                    starts[i].classList.add("border-danger")
+                    ends[i].classList.add("border-danger")
+                }
+            }
+            formSpan.innerHTML = "Дата начала должна быть раньше даты окончания!"
+            formSpan.classList.add("mb-3", "d-block")
+            return false
+        } else {
+            formSpan.innerHTML = ""
+            formSpan.classList.remove("mb-3", "d-block")
+        }
+
+        flag = false
+        const today = new Date()
+        for (let el of listWork) {
+            if ((!el.checked && (new Date(el.end_time) > today)) || (new Date(el.start_time) > today)) {
+                flag = true
+                break
+            }
+        }
+
+        if (flag) {
+            for (let i = 0; i < listWork.length; i++) {
+                if (new Date(listWork[i].start_time) > today) {
+                    starts[i].classList.add("border-danger")
+                }
+                if (!listWork[i].checked && (new Date(listWork[i].end_time) > today)) {
+                    ends[i].classList.add("border-danger")
+                }
+            }
+            formSpan.innerHTML = "Даты не должны быть позже сегодняшнего дня!"
+            formSpan.classList.add("mb-3", "d-block")
+            return false
+        } else {
+            formSpan.innerHTML = ""
+            formSpan.classList.remove("mb-3", "d-block")
+        }
+
         return true
     }
 
     const handelSubmitCreate = async () => {
-        console.log(oldRes, res, listWork)
         let saveListWork = listWork.map((item) => ({
             post: item?.post,
             description: item?.description,
             start_time: item?.start_time,
-            end_time: item.end_time,
+            end_time: (item?.checked) ? null : item?.end_time,
         }))
         let saveRes = {
             post: res?.post,
             description: res?.description,
-            old_work: saveListWork
+            old_works: saveListWork
         }
-        console.log(saveRes)
-        // const res = await createVacancy({post: res?.post, description: res?.description}, token)
-        // if (res?.status === "ok") {
-        //     alert("Ваша вакансия сохранен!")
-        // } else {
-        //     alert("Ваша вакансия не сохранена ;-(")
-        // }
+        const result = await ResumeService.createResume(saveRes, token)
+        console.log("save resume: ", result?.status)
     }
 
     const handelSubmitUpdate = async () => {
-        console.log(oldRes, res, listWork)
-        // const res = await updateVacancy(vac?.id, {post: vac?.post, description: vac?.description}, token)
-        // if (res?.status === "ok") {
-        //     alert("Ваша вакансия изменена!")
-        // } else {
-        //     alert("Ваша вакансия изменена ;-(")
-        // }
-        // проверять совпедения вызова из бд
+        let oldUpdateList = oldRes.old_works.map((item, i) => ({
+            id: i,
+            work_id: item?.work_id,
+            post: item?.post,
+            description: item?.description,
+            start_time: item?.start_time,
+            end_time: (item?.checked) ? null : item?.end_time,
+        }))
+
+        let newUpdateList = listWork.map((item) => ({
+            id: item.id,
+            work_id: item?.work_id,
+            post: item?.post,
+            description: item?.description,
+            start_time: item?.start_time,
+            end_time: (item?.checked) ? null : item?.end_time,
+        }))
+
+        let updateRes = {
+            post: res?.post,
+            description: res?.description,
+            old_works_old: oldUpdateList,
+            old_works_new: newUpdateList,
+        }
+
+
+        const result = await ResumeService.updateResume(oldRes?.id, updateRes, token)
+        console.log("save resume: ", result?.status)
     }
+
 
     return (
         <>
@@ -151,7 +251,7 @@ export const ModalRes = ({show, setShow, isCreate, setShowUpdate, oldRes, setOld
                     <form>
                         <label className="mb-2 w-100">
                             <p className="mb-1 form-label">Должность:</p>
-                            <input id={`inp-${isCreate}`} className="form-control" type="text" name="post"
+                            <input className="form-control" type="text" name="post"
                                    defaultValue={res.post}
                                    onChange={(e) => setRes(
                                        {...res, post: e.target.value}
@@ -160,7 +260,7 @@ export const ModalRes = ({show, setShow, isCreate, setShowUpdate, oldRes, setOld
                         </label>
                         <label className="mb-2 w-100">
                             <p className="mb-1 form-label">Описание:</p>
-                            <textarea id={`txt-${isCreate}`} className="form-control" rows="3" name="description"
+                            <textarea className="form-control modal-textarea" rows="3" name="description"
                                       defaultValue={res.description}
                                       onChange={(e) => setRes(
                                           {...res, description: e.target.value}
@@ -173,14 +273,14 @@ export const ModalRes = ({show, setShow, isCreate, setShowUpdate, oldRes, setOld
                                     onClick={() => {
                                         listWork.push({
                                             id: idCheck,
-                                            work_id: "",
-                                            start_time: "",
-                                            end_time: "",
+                                            work_id: 0,
+                                            post: "",
+                                            description: "",
+                                            start_time: null,
+                                            end_time: null,
                                             checked: false,
                                         })
                                         setIdCheck(idCheck + 1)
-
-                                        console.log(res, listWork)
                                     }}
                             >
                                 <i className="fa fa-plus" aria-hidden="true"></i>
@@ -193,25 +293,30 @@ export const ModalRes = ({show, setShow, isCreate, setShowUpdate, oldRes, setOld
                                     listWork.map((work) => (
                                         <li key={work?.id} className="mb-3 card">
                                             <div className="card-body">
-                                                <Button className="form__btn" size="sm" variant="danger">
+                                                <Button className="form__btn" size="sm" variant="danger"
+                                                        onClick={() => {
+                                                            setListWork([...listWork.filter(item => item.id !== work.id)])
+                                                        }}
+                                                >
                                                     <i className="fa fa-minus" aria-hidden="true"></i>
                                                 </Button>
                                                 <label className="mb-2 w-100">
                                                     <p className="mb-1 form-label">Должность:</p>
-                                                    <input className="form-control" type="text"
+                                                    <input className="form-control" type="text" name="post"
                                                            defaultValue={listWork.filter(item => item.id === work.id)[0]?.post}
                                                            onChange={(e) => {
                                                                let old = listWork.filter(item => item.id === work.id)[0]
                                                                old = {...old, post: e.target.value}
                                                                let newArr = listWork.filter(item => item.id !== work.id)
                                                                setListWork([old, ...newArr])
-                                                               listWork.sort((a, b) => new Date(a.start_time) < new Date(b.start_time))
+                                                               listWork.sort((a, b) => compareDate(a, b))
                                                            }}
                                                     />
                                                 </label>
                                                 <label className="mb-2 w-100">
                                                     <p className="mb-1 form-label">Описание:</p>
-                                                    <textarea className="form-control" rows="2"
+                                                    <textarea className="form-control modal-textarea" rows="2"
+                                                              name="description"
                                                               defaultValue={listWork.filter(item => item.id === work.id)[0]?.description}
                                                               onChange={(e) => {
                                                                   let old = listWork.filter(item => item.id === work.id)[0]
@@ -222,24 +327,25 @@ export const ModalRes = ({show, setShow, isCreate, setShowUpdate, oldRes, setOld
                                                               }}
                                                     />
                                                 </label>
-                                                <label htmlFor={`data-start-${work.id}`} className="mb-1 form-label ">Начало
+                                                <label htmlFor={`date-start-${work.id}`} className="mb-1 form-label ">Начало
                                                     работы:</label>
                                                 <br/>
                                                 <DatePicker
-                                                    id={`data-start-${work.id}`}
+                                                    id={`date-start-${work.id}`}
+                                                    name="date-start"
                                                     className="form-control"
                                                     dateFormat="dd.MM.yyyy"
                                                     selected={listWork.filter(item => item.id === work.id)[0]?.start_time}
                                                     onChange={(date) => {
                                                         let old = listWork.filter(item => item.id === work.id)[0]
-                                                        old = {...old, start_time: (date) ? date.toISOString() : ""}
+                                                        old = {...old, start_time: (date) ? date.toISOString() : null}
                                                         let newArr = [old, ...listWork.filter(item => item.id !== work.id)]
                                                         newArr.sort((a, b) => compareDate(a, b))
                                                         setListWork(newArr)
                                                     }}
                                                 />
                                                 <br/>
-                                                <label htmlFor={`data-end-${work.id}`} className="mt-2 mb-1 w-100">
+                                                <label htmlFor={`date-end-${work.id}`} className="mt-2 mb-1 w-100">
                                                     <span className="mb-1 form-label me-2">Конец работы:</span>
                                                     <Form.Check
                                                         className="d-inline-block"
@@ -263,20 +369,20 @@ export const ModalRes = ({show, setShow, isCreate, setShowUpdate, oldRes, setOld
 
                                                 }}>
                                                     <DatePicker
-                                                        id={`data-end-${work.id}`}
+                                                        id={`date-end-${work.id}`}
+                                                        name="date-end"
                                                         className="form-control"
                                                         dateFormat="dd.MM.yyyy"
                                                         selected={listWork.filter(item => item.id === work.id)[0]?.end_time}
                                                         onChange={(date) => {
                                                             let old = listWork.filter(item => item.id === work.id)[0]
-                                                            old = {...old, end_time: date.toISOString()}
+                                                            old = {...old, end_time: (date) ? date.toISOString() : null}
                                                             let newArr = [old, ...listWork.filter(item => item.id !== work.id)]
                                                             newArr.sort((a, b) => compareDate(a, b))
                                                             setListWork(newArr)
                                                         }}
                                                     />
                                                 </div>
-
                                             </div>
                                         </li>
                                     ))
@@ -295,25 +401,34 @@ export const ModalRes = ({show, setShow, isCreate, setShowUpdate, oldRes, setOld
                     }}>
                         Закрыть
                     </Button>
-
                     {
                         (isCreate)
                             ? <Button variant="primary" onClick={async () => {
-                                if (!checkForm()) return
-
+                                if (!checkForm(listWork)) return
                                 await handelSubmitCreate()
                                 dropData()
                                 updateList()
+                                setOldRes({
+                                    id: "",
+                                    post: "",
+                                    description: "",
+                                    old_works: [{
+                                        id: "",
+                                        post: "",
+                                        description: "",
+                                        start_time: null,
+                                        end_time: null,
+                                    }]
+                                })
                                 handleClose()
                             }}>
                                 Сохранить
                             </Button>
                             : <Button variant="warning" onClick={async () => {
-                                if (!checkForm()) return
+                                if (!checkForm(listWork)) return
                                 handleClose()
                                 await handelSubmitUpdate()
-                                // setOldRes({...oldRes, post: res?.post, description: res?.description})
-                                //вызов обновления листа опыта работы
+                                updateList()
                                 dropData()
                             }}>
                                 Изменить

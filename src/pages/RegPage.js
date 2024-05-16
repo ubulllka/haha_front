@@ -1,6 +1,6 @@
 import {useActionData, useNavigation, redirect} from "react-router-dom"
 import {RegForm} from "../components/auth/RegForm"
-import {singUp} from "../services/AuthService";
+import AuthService, {singUp} from "../services/AuthService";
 
 export const RegPage = () => {
     const navigation = useNavigation()
@@ -58,7 +58,7 @@ export const regAction = async ({request}) => {
         span.innerHTML = "Пароли не совпадают!"
         return null
     }
-    const res = await singUp(newUser)
+    const res = await AuthService.singUp(newUser)
     if (!res) {
         emailSpan.innerHTML = "Аккаунт с такой почтой уже существует"
         return null

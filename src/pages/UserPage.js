@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import {getList, getListPag, getUser} from "../services/UserService";
+import UserService from "../services/UserService";
 import {useSelector} from "react-redux";
 import {ResCard} from "../components/resumes/ResCard";
 import {VacCard} from "../components/vacancies/VacCard";
@@ -52,7 +52,7 @@ export const UserPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             setIsLoadListMod(true);
-            const result = (role !== "ANON") ? await getList(token) : []
+            const result = (role !== "ANON") ? await UserService.getList(token) : []
             setListMod(result)
             setIsLoadListMod(false);
         };
@@ -62,7 +62,7 @@ export const UserPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             setIsLoding(true);
-            const result = await getUser(id)
+            const result = await UserService.getUser(id)
             setUser(result)
             setIsLoding(false);
         };
@@ -72,7 +72,7 @@ export const UserPage = () => {
     useEffect(() => {
         const fetchData = async () => {
             setIsLoadList(true);
-            const result = await getListPag(id, page)
+            const result = await UserService.getListPag(id, page)
             setList(result?.list)
             setPagination(result?.pag)
             setIsLoadList(false);

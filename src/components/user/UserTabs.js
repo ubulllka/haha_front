@@ -2,7 +2,7 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import {useSelector} from "react-redux";
 import {FilterTab} from "./FilterTab";
-import {getMyAllResponds, getOtherAllResponds} from "../../services/RespondService";
+import RespondService from "../../services/RespondService";
 import {VacProfile} from "../vacancies/VacProfile";
 import {ResProfile} from "../resumes/ResProfile";
 
@@ -25,10 +25,10 @@ export const UserTabs = () => {
                 }
             </Tab>
             <Tab eventKey="myrespond" title="Мои отклики">
-                <FilterTab type={"my"} funcForGetData={getMyAllResponds}/>
+                <FilterTab type={"my"} funcForGetData={RespondService.getMyAllResponds}/>
             </Tab>
             <Tab eventKey="otherrespond" title="Отклики мне">
-                <FilterTab type={"other"} funcForGetData={getOtherAllResponds}/>
+                <FilterTab type={"other"} funcForGetData={RespondService.getOtherAllResponds}/>
             </Tab>
         </Tabs>
     )

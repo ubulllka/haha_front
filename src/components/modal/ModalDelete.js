@@ -2,8 +2,8 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
-import {deleteVacancy} from "../../services/VacancyService";
-import {deleteResume} from "../../services/ResumeService";
+import ResumeService from "../../services/ResumeService";
+import VacancyService from "../../services/VacancyService";
 
 export const ModalDelete = ({show, setShow, isVac, oldItem, updateList}) => {
 
@@ -18,8 +18,9 @@ export const ModalDelete = ({show, setShow, isVac, oldItem, updateList}) => {
 
     const handelRemove = async (id, token) => {
         const res = (isVac)
-            ? await deleteVacancy(id, token)
-            : await deleteResume(id, token)
+            ? await VacancyService.deleteVacancy(id, token)
+            : await ResumeService.deleteResume(id, token)
+        console.log("delete item: ", res?.status)
 
     }
 

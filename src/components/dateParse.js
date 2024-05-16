@@ -9,3 +9,23 @@ export const dateCard = (dateStr) => {
     const monthStr = (month < 10) ? "0" + month : month
     return `${dayStr}.${monthStr}.${year}`
 }
+
+export const compareDate = (a, b) => {
+    if (new Date(a.start_time) < new Date(b.start_time)) {
+        return 1
+    }
+    if (new Date(a.start_time) > new Date(b.start_time)) {
+        return -1
+    }
+    return 0
+}
+
+export const compareForm = (a, b) => {
+    if (new Date(a.start_time) < new Date(b.end_time)) {
+        return 1
+    }
+    if (new Date(a.start_time) > new Date(b.end_time)) {
+        return -1
+    }
+    return 0
+}

@@ -3,9 +3,9 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import {useEffect, useState} from "react";
-import {searchResumes, searchResumesAnon} from "../../services/ResumeService";
+import ResumeService from "../../services/ResumeService";
 import {PagBlock} from "../Pag";
-import {getList} from "../../services/UserService";
+import UserService from "../../services/UserService";
 import {ResCard} from "./ResCard";
 import {ModalBlockRole} from "../modal/ModalBlockRole";
 
@@ -28,7 +28,7 @@ export const ListAllRes = () => {
         const fetchData = async () => {
             setIsLoadListVac(true);
             if (role === "EMPLOYER") {
-                const result = await getList(token)
+                const result = await UserService.getList(token)
                 setListVac(result)
             }
             setIsLoadListVac(false);
@@ -39,8 +39,8 @@ export const ListAllRes = () => {
     const fetchDataResList = async () => {
         setIsLoading(true);
         const result = (role === "EMPLOYER")
-            ? await searchResumes(page, search, token)
-            : await searchResumesAnon(page, search)
+            ? await ResumeService.searchResumes(page, search, token)
+            : await ResumeService.searchResumesAnon(page, search)
         setList(result?.list)
         setPagination(result?.pag)
         setIsLoading(false);

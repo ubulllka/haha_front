@@ -1,13 +1,11 @@
 import {useEffect, useState} from "react";
-import {getList, getUser, isUser} from "../../services/UserService";
+import UserService from "../../services/UserService";
 import {Link} from "react-router-dom";
-import {getResume, getResumeAnon, getResumesWorkListAnon} from "../../services/ResumeService";
+import ResumeService from "../../services/ResumeService";
 import {useSelector} from "react-redux";
 import {UserInfo} from "../user/UserInfo";
 import Button from "react-bootstrap/Button";
-import Card from "react-bootstrap/Card";
 import {ModalBlockRole} from "../modal/ModalBlockRole";
-import {dateCard} from "../dateParse";
 import {WorkCard} from "../work/WorkCard";
 
 
@@ -39,15 +37,15 @@ export const ResCardPage = ({id}) => {
         const fetchData = async () => {
             setIsLoading(true);
             const resRes = (role === "EMPLOYER")
-                ? await getResume(id, token)
-                : await getResumeAnon(id)
+                ? await ResumeService.getResume(id, token)
+                : await ResumeService.getResumeAnon(id)
             setRes(resRes)
-            const resListWork = await getResumesWorkListAnon(id)
+            const resListWork = await ResumeService.getResumesWorkListAnon(id)
             setListWork(resListWork)
-            const result = await getUser(resRes?.applicant_id);
+            const result = await UserService.getUser(resRes?.applicant_id);
             setAppl(result);
             if (token !== "") {
-                const myprofRes = await isUser(result?.ID, token)
+                const myprofRes = await UserService.isUser(result?.ID, token)
                 setMyprof(myprofRes?.status === "true")
             }
             setIsLoading(false);
@@ -63,7 +61,7 @@ export const ResCardPage = ({id}) => {
     const fetchDataRes = async () => {
         setIsLoadListRes(true);
         if (role === "EMPLOYER") { //для modalBlock
-            const result = await getList(token)
+            const result = await UserService.getList(token)
             setListRes(result)
         }
         setIsLoadListRes(false);
@@ -88,6 +86,7 @@ export const ResCardPage = ({id}) => {
                     <div className="col-lg-8">
                         <h3 className="mb-2">{res?.post}</h3>
                         <p className="mb-1">{res?.description}</p>
+
                         <h4>Опыт работы:</h4>
                         <ul className="list-unstyled">
                             {
@@ -99,6 +98,7 @@ export const ResCardPage = ({id}) => {
                                     )) : <li>Список пуст ;-(</li>
                             }
                         </ul>
+
                     </div>
                     <div className="col-lg-4">
                         {

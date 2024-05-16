@@ -1,85 +1,67 @@
-import {checkAuth} from "./helper";
+import $api from "../http";
 
-const baseUrl = "http://localhost:8080/api/res/"
-const baseUrlAnon = "http://localhost:8080/api/resa/"
+export default class ResumeService {
+    static async searchResumesAnon(page, q) {
+        return $api.send(`/resa/search?page=${page}&q=${q}`, {})
+    }
 
-export async function searchResumesAnon(page, q) {
-    const url = baseUrlAnon + `search?page=${page}&q=${q}`
-    const result = await fetch(`${url}`)
-    return result.json()
-}
+    static async getResumeAnon(id) {
+        return $api.send(`/resa/${id}`, {})
+    }
 
-export async function getResumeAnon(id) {
-    const url = baseUrlAnon + id
-    const result = await fetch(`${url}`)
-    return result.json()
-}
-export async function searchResumes(page, q, token) {
-    const url = baseUrl + `search?page=${page}&q=${q}`
-    const result = await fetch(`${url}`, {
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + token,
-        },
-    })
-    return checkAuth(result) ? result.json() : null
-}
+    static async getResumesWorkListAnon(id) {
+        return $api.send(`/resa/${id}/work`, {})
+    }
 
-export async function getResume(id, token) {
-    const url = baseUrl + id
-    const result = await fetch(`${url}`,{
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + token,
-        },
-    })
-    return checkAuth(result) ? result.json() : null
-}
+    static async searchResumes(page, q, token) {
+        return $api.send(`/res/search?page=${page}&q=${q}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + token,
+            },
+        })
+    }
 
-export async function getResumesWorkListAnon(id) {
-    const url = baseUrlAnon + id + "/work"
-    const result = await fetch(`${url}`)
-    return result.json()
-}
+    static async getResume(id, token) {
+        return $api.send(`/res/${id}`, {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + token,
+            },
+        })
+    }
 
+    static async createResume(resume, token) {
+        return $api.send(`/res/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + token,
+            },
+            body: JSON.stringify(resume),
+        })
+    }
 
-export async function createResume(resume, token) { //big gg
-    const result = await fetch(`${baseUrl}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + token,
-        },
-        body: JSON.stringify(resume),
-    })
+    static async updateResume(id, resume, token) {
+        return $api.send(`/res/${id}`, {
+            method: 'PATCH',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + token,
+            },
+            body: JSON.stringify(resume),
+        })
+    }
 
-    return checkAuth(result) ? result.json() : null
-}
-
-export async function updateResume(id, resume, token) { //post, description
-    const url = baseUrl + id
-    const result = await fetch(`${url}`, {
-        method: 'PATCH',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + token,
-        },
-        body: JSON.stringify(resume),
-    })
-    return checkAuth(result) ? result.json() : null
-}
-
-export async function deleteResume(id, token) {
-    const url = baseUrl + id
-    const result = await fetch(`${url}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': "Bearer " + token,
-        },
-    })
-
-    return checkAuth(result) ? result.json() : null
+    static async deleteResume(id, token) {
+        return $api.send(`/res/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': "Bearer " + token,
+            },
+        })
+    }
 }
 
 

@@ -6,17 +6,16 @@ import {Provider} from 'react-redux'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.min.css'
 import './index.css';
-import {SSRProvider} from "@react-aria/ssr";
+import {disableReactDevTools} from "@fvilers/disable-react-devtools";
 
+disableReactDevTools();
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
-        <SSRProvider>
-            <Provider store={store}>
-                <App/>
-            </Provider>
-        </SSRProvider>
+        <Provider store={store}>
+            <App/>
+        </Provider>
     </React.StrictMode>
 );
 

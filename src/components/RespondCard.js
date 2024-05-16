@@ -3,7 +3,7 @@ import Card from "react-bootstrap/Card";
 import {dateCard} from "./dateParse";
 import Button from "react-bootstrap/Button";
 import {useState} from "react";
-import {deleteMyRespond, deleteOtherRespond, updateRespond} from "../services/RespondService";
+import RespondService from "../services/RespondService";
 
 
 const GetFooter = ({type, itemRespond, setItemRespond, fetchDataRespondList}) => {
@@ -11,8 +11,8 @@ const GetFooter = ({type, itemRespond, setItemRespond, fetchDataRespondList}) =>
 
     const handleSubmitDelete = async (id) => {
         const res = (type === "my")
-            ? await deleteMyRespond(id, token)
-            : await deleteOtherRespond(id, token)
+            ? await RespondService.deleteMyRespond(id, token)
+            : await RespondService.deleteOtherRespond(id, token)
         if (res?.status === "ok") {
             fetchDataRespondList()
         }
@@ -21,7 +21,7 @@ const GetFooter = ({type, itemRespond, setItemRespond, fetchDataRespondList}) =>
 
     if ((type === "other") && (itemRespond?.status === "WAIT")) {
         const handleSubmitUpdate = async (id, status) => {
-            const res = await updateRespond({id: id, status: status}, token)
+            const res = await RespondService.updateRespond({id: id, status: status}, token)
             if (res?.status === "ok") {
                 setItemRespond({...itemRespond, status: status})
             }

@@ -4,7 +4,7 @@ import Button from "react-bootstrap/Button";
 import {dateCard} from "../dateParse";
 import {WorkProfile} from "../work/WorkProfile";
 import {useEffect, useState} from "react";
-import {getResumesWorkListAnon} from "../../services/ResumeService";
+import ResumeService from "../../services/ResumeService";
 
 const GetStatus = ({status}) => {
     const map = new Map();
@@ -26,7 +26,7 @@ export const ResCard = ({res, setRes, setShow, setIsCreate, setShowDel, setModal
 
     const fetchData = async () => {
         setIsLoading(true);
-        const resListWork = await getResumesWorkListAnon(res?.ID)
+        const resListWork = await ResumeService.getResumesWorkListAnon(res?.ID)
         setListWork(resListWork)
         setIsLoading(false);
     };
@@ -72,23 +72,32 @@ export const ResCard = ({res, setRes, setShow, setIsCreate, setShowDel, setModal
                             <Button variant={"warning"} className="p-0 ps-1 pe-1"
                                     onClick={() => {
                                         setIsCreate(false)
-                                        setShow(true)
-                                        setRes({
+                                        let item = {
                                             id: res?.ID,
                                             post: res?.post,
                                             description: res?.description,
-                                            old_work: listWork.map((work, i) => ({
-                                                index: i,
-                                                id: work?.ID,
+                                            old_works: res.old_works.map((work, i) => ({
+                                                id: i,
+                                                work_id: work?.ID,
                                                 post: work?.post,
                                                 description: work?.description,
                                                 start_time: work?.start_time,
                                                 end_time: work?.end_time
                                             }))
-                                        })
+                                        }
+                                        setRes(item)
+                                        setShow(true)
                                     }}
                             >Редактировать</Button>
-                            <Button variant={"danger"} className="p-0 ps-1 pe-1">Удалить</Button>
+                            <Button variant={"danger"} className="p-0 ps-1 pe-1"
+                                    onClick={() => {
+                                        setShowDel(true)
+                                        setItem({
+                                            id: res?.ID,
+                                            post: res?.post,
+                                        })
+                                    }}
+                            >Удалить</Button>
                         </>
                     }
                     <p className="mb-0">{dateCard(res?.CreatedAt)}</p>

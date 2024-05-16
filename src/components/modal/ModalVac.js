@@ -2,9 +2,9 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
-import {createVacancy, updateVacancy} from "../../services/VacancyService";
+import VacancyService from "../../services/VacancyService";
 
-export const ModalVac = ({show, setShow, isCreate, oldVac, setOldVac, updateList, isAlllist}) => {
+export const ModalVac = ({show, setShow, isCreate, oldVac, setOldVac, updateList}) => {
 
     const token = useSelector((state) => state.user.token)
     const handleClose = () => setShow(false);
@@ -40,24 +40,14 @@ export const ModalVac = ({show, setShow, isCreate, oldVac, setOldVac, updateList
     }
 
     const handelSubmitCreate = async () => {
-        const res = await createVacancy({post: vac?.post, description: vac?.description}, token)
-        if (res?.status === "ok") {
-            alert("Ваша вакансия сохранен!")
-        } else {
-            alert("Ваша вакансия не сохранена ;-(")
-        }
+        const res = await VacancyService.createVacancy({post: vac?.post, description: vac?.description}, token)
+        console.log("save vacancy: ", res?.status)
     }
 
     const handelSubmitUpdate = async () => {
-        const res = await updateVacancy(vac?.id, {post: vac?.post, description: vac?.description}, token)
-        if (res?.status === "ok") {
-            alert("Ваша вакансия изменена!")
-        } else {
-            alert("Ваша вакансия изменена ;-(")
-        }
+        const res = await VacancyService.updateVacancy(vac?.id, {post: vac?.post, description: vac?.description}, token)
+        console.log("update vacancy: ", res?.status)
     }
-
-
     return (
         <>
             <Modal show={show} onHide={() => {
@@ -131,7 +121,7 @@ export const ModalVac = ({show, setShow, isCreate, oldVac, setOldVac, updateList
                                 if (!checkForm()) return
                                 handleClose()
                                 await handelSubmitUpdate()
-                                setOldVac({...oldVac, post: vac?.post, description: vac?.description})
+                                updateList()
                                 setVac({
                                     id: "",
                                     post: "",

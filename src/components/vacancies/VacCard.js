@@ -59,7 +59,7 @@ export const VacCard = ({vac, setVac, setShow, setIsCreate, setShowDel, setModal
                                     }}
                             >Редактировать</Button>
                             <Button variant={"danger"} className="p-0 ps-1 pe-1"
-                                    onClick={async () => {
+                                    onClick={() => {
                                         setShowDel(true)
                                         setItem({
                                             id: vac?.ID,

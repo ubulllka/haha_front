@@ -17,6 +17,8 @@ export const Header = () => {
             token: '',
             role: 'ANON',
         }))
+        localStorage.setItem("token", "")
+        localStorage.setItem("role", "ANON")
         navigate('/')
     }
 
